@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useFetch = (url) => {
+const useFetch = (url: string) => {
     const [result, setResult] = useState({});
     const getData = async () => {
         try {
@@ -15,7 +15,7 @@ const useFetch = (url) => {
             };
             const response = await axios.request(options);
             setResult(response.data);
-        } catch (error) {
+        } catch (error: any) {
             if (error.response) {
                 console.log('error.response');
                 console.log(error.response);

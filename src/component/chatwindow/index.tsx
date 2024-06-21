@@ -6,8 +6,8 @@ const ChatWindow = () => {
     const [messages, setMessages] = React.useState([
         {sender: 'atom', content: []}
     ]);
-    const generateMessage = async (text) => {
-        setMessages((prev) => prev.concat({ sender: 'me', content: text }));
+    const generateMessage = async (text: string) => {
+        setMessages((prev : any) => prev.concat({ sender: 'me', content: text }));
         const { request, response } = {
             request : [],
             response : []

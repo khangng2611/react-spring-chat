@@ -1,4 +1,6 @@
-const ToMessage = ({ content}) => {
+import React from "react";
+
+const ToMessage = ({ content }: { content: Array<string> }) => {
     return (
         <div className="col-start-1 col-end-10 px-3 py-1 rounded-lg">
             <div className="flex flex-row items-end">
@@ -10,7 +12,7 @@ const ToMessage = ({ content}) => {
                     />
                 </div>
                 <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl min-w-fit max-w-full" >
-                    <p className="break-words" style={{whiteSpace: "pre-wrap"}}>
+                    <p className="break-words" style={{ whiteSpace: "pre-wrap" }}>
                         {
                             content && content.map((line, id) => (
                                 <span key={id} >

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from './sidebar';
-import ChatWindow from './chatwindow';
+import React from 'react';
+import Sidebar from '../sidebar';
+import ChatWindow from '../chatwindow';
 
-const ChatBox = () => {
+const Container = () => {
     return (
         <div className="flex h-screen antialiased text-gray-800">
             <div className="flex flex-row h-full w-full overflow-x-hidden">
@@ -13,4 +13,4 @@ const ChatBox = () => {
     );
 };
 
-export default ChatBox;
+export default Container;

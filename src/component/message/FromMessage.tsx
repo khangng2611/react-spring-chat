@@ -1,4 +1,6 @@
-const FromMessage = ({ content }) => {
+import React from "react";
+
+const FromMessage = ({ content }: { content: Array<string> }) => {
     return (
         <div className="col-start-6 col-end-13 p-3 rounded-lg">
             <div className="flex items-center justify-start flex-row-reverse">

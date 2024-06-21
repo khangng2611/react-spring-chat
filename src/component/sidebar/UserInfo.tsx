@@ -1,3 +1,5 @@
+import React from "react";
+
 const UserInfo = () => {
     return (
         <div className="flex flex-col items-center bg-blue-300 py-4 my-6 rounded-lg" >

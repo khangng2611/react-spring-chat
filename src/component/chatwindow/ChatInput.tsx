@@ -1,8 +1,8 @@
 import React from "react";
 
-const ChatInput = ({generateMessage}) => {
+const ChatInput = ({generateMessage}: {generateMessage: (message: string) => void}) => {
     const [inputValue, setInputValue] = React.useState('');
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputValue(e.target.value);
     };
 
@@ -68,7 +68,7 @@ const ChatInput = ({generateMessage}) => {
             <div className="ml-4">
                 <button
                     className="flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
-                    onClick={() => handleOnClick(inputValue)}
+                    onClick={() => handleOnClick()}
                 >
                     <span>Send</span>
                     <span className="ml-2">
