@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import ChatContainer from './component/container/Container';
+import React from 'react';
 import Login from './component/authentication/Login';
+import Container from './component/container/Container';
+import SessionContext from './context/SessionContext';
+import { Route, Routes, BrowserRouter as Router} from 'react-router-dom';
 import './App.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const userLoggedIn = localStorage.getItem('session');
-    setIsLoggedIn(!!userLoggedIn);
-  }, []);
-
-  // if (!isLoggedIn) {
-  //     return <Login />;
-  // }
   return (
-    <>
-      {!isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} />}
-      {isLoggedIn && <ChatContainer />}
-    </>
+    <Router>
+      <SessionContext>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/chat" element={<Container />} />
+        </Routes>
+      </SessionContext>
+    </Router>
   );
 }
 

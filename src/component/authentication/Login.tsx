@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { initWebSockets } from "../../services/websockets";
+import { useSession } from '../../context/SessionContext';
 
-const Login = (setIsLoggedIn: any) => {
+const Login = () => {
     const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { handleUserLogin } = useSession();
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -15,9 +17,8 @@ const Login = (setIsLoggedIn: any) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        handleUserLogin({ username, password });
         initWebSockets();
-        localStorage.setItem('session', username);
-        setIsLoggedIn(true);
     };
 
     return (
