@@ -2,7 +2,7 @@ import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef } from 'react'
 
-const ChatContent = ({ messages } : {messages : Array<{sender: string, content: Array<string>}>}) => {
+const ChatContent = ({ messages }: { messages: Array<{ sender: string, content: Array<string> }> }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -19,9 +19,8 @@ const ChatContent = ({ messages } : {messages : Array<{sender: string, content: 
                     {messages.map((message, index) => {
                         return (
                             message.sender === 'me' ?
-                                (<><React.Fragment key={index}><FromMessage content={message.content} /></React.Fragment></>) 
-                                :
-                                (<><React.Fragment key={index}><ToMessage content={message.content} /></React.Fragment></>)
+                            (<FromMessage key={index} content={message.content} />) :
+                            (<ToMessage key={index} content={message.content} />)
                         )
                     })}
                     <div ref={messagesEndRef} />

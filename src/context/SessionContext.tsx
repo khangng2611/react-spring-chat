@@ -3,15 +3,16 @@ import React, {
     useCallback,
     useContext,
     useEffect,
+    useRef,
     useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-//   import apiClient from "./apiClient";
 import Loader from "../component/loader"
+import WebSocketsClient from "../services/websockets";
 
 interface UserDetailsSchema {
-    name: string;
+    fullName: string;
     username: string;
 }
 
@@ -22,17 +23,20 @@ interface StateSchema {
 
 type LOGIN_FUNC = (credentials: {
     username: string;
+    fullName: string
     password: string;
 }) => Promise<void>;
 
 interface ContextSchema {
     details: UserDetailsSchema | null;
+    wsClient: WebSocketsClient | null;
     handleUserLogin: LOGIN_FUNC;
     handleUserLogout: () => Promise<void>;
 }
 
 const Context = createContext<ContextSchema>({
     details: null,
+    wsClient: null,
     handleUserLogin: () => Promise.resolve(),
     handleUserLogout: () => Promise.resolve(),
 });
@@ -44,6 +48,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
         isLoading: true,
         details: null,
     });
+    const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -56,11 +61,12 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
                 //   });
                 // userDetails = response.data;
                 userDetails = {
-                    name: 'Test',
+                    fullName: credentials.fullName,
                     username: credentials.username,
-                }
-                localStorage.setItem("session", credentials.username);
+                };
                 setState({ isLoading: false, details: userDetails });
+                wsClient.current = new WebSocketsClient(userDetails);
+                localStorage.setItem("session", JSON.stringify(userDetails));
                 navigate(redirectPath, { replace: true });
             } catch (error: unknown) {
                 let message = "Something went wrong";
@@ -78,6 +84,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
             try {
                 // await apiClient.post("/logout");
                 localStorage.removeItem("session");
+                wsClient?.current.onDisconnected();
             } finally {
                 navigate("/login", { replace: true });
             }  // eslint-disable-next-line
@@ -87,38 +94,32 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
     const handleIfUserAuthenticated = useCallback(
         async () => {
             setState({ isLoading: true, details: null });
-            let userDetails: UserDetailsSchema | null = null;
-            try {
-                // const response = await apiClient.get("/refresh");
-                // userDetails = response.data;
+            let userDetails: UserDetailsSchema;
+            // const response = await apiClient.get("/refresh");
+            // userDetails = response.data;
 
-                let session = localStorage.getItem("session");
-                if (session) {
-                    userDetails = {
-                        name: 'Test',
-                        username: session,
-                    }
-                } else {
-                    throw new Error("No session found");
-                }
-
-                if (location.pathname === "/login")
-                    navigate("/chat", { replace: true });
-            } catch {
-                navigate("/login", { replace: true });
-            } finally {
+            let session = localStorage.getItem("session");
+            if (session) {
+                userDetails = JSON.parse(session);
+                wsClient.current = new WebSocketsClient(userDetails);
                 setState({ isLoading: false, details: userDetails });
-            }  // eslint-disable-next-line
-        }, [] 
+                if (location.pathname === "/login" || location.pathname === "/")
+                    navigate("/chat", { replace: true });
+            } else {
+                navigate("/login", { replace: true });
+                setState({ isLoading: false, details: null });
+            }
+            // eslint-disable-next-line
+        }, []
     );
 
     useEffect(() => {
         handleIfUserAuthenticated(); // eslint-disable-next-line
-    }, []); 
+    }, []);
 
     return (
         <Context.Provider
-            value={{ details: state.details, handleUserLogin, handleUserLogout }}
+            value={{ details: state.details, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
         >
             {state.isLoading ? <Loader /> : children}
         </Context.Provider>

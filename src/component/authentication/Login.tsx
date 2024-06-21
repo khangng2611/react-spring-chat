@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
-import { initWebSockets } from "../../services/websockets";
+import React, { useCallback, useState } from 'react';
 import { useSession } from '../../context/SessionContext';
 
 const Login = () => {
-    const [username, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [userInfo, setUserInfo] = useState({
+        username: '',
+        fullName: '',
+        password: ''
+    })
     const { handleUserLogin } = useSession();
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
+    const handleFormChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+            setUserInfo((old) => ({ ...old, [name]: value }));
+        },
+        []
+    )
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        handleUserLogin({ username, password });
-        initWebSockets();
+        handleUserLogin(userInfo);
     };
 
     return (
@@ -27,14 +28,26 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Full Name:
+                    </label>
+                    <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name="fullName"
+                        type="text"
+                        value={userInfo.fullName}
+                        onChange={handleFormChange}
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                         Username:
                     </label>
                     <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="username"
+                        name="username"
                         type="text"
-                        value={username}
-                        onChange={handleEmailChange}
+                        value={userInfo.username}
+                        onChange={handleFormChange}
                     />
                 </div>
                 <div className="mb-4">
@@ -43,10 +56,10 @@ const Login = () => {
                     </label>
                     <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
+                        name="password"
                         type="password"
-                        value={password}
-                        onChange={handlePasswordChange}
+                        value={userInfo.password}
+                        onChange={handleFormChange}
                     />
                 </div>
                 <button

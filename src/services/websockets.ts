@@ -1,69 +1,59 @@
 import SockJS from 'sockjs-client';
-import Stomp, { Frame } from 'stompjs';
+import Stomp, { Frame, Client } from 'stompjs';
 
-let client : Stomp.Client;
+class WebSocketsClient {
+    private client: Client | null;
+    private username: string | null
+    private fullName: string | null
 
-const initWebSockets = () => {
-    const socket = new SockJS(process.env.REACT_APP_BROKER_URL || '');
-    client = Stomp.over(socket);
-    client.connect(
-        {
-            login : "",
-            passcode: ""
-        }, 
-        onConnected, 
-        onError
-    );
-}
-
-const onConnected = () => {
-    while (!client.connected) {}
-    let user = {
-        id: 1,
-        username: 'stompjs',
-        fullName: 'stompjs'
+    constructor(userInfo : { username: string, fullName: string}) {
+        this.username = userInfo.username
+        this.fullName = userInfo.fullName
+        const socket = new SockJS(process.env.REACT_APP_BROKER_URL || '');
+        this.client = Stomp.over(socket);
+        this.client.connect({}, this.onConnected, this.onError);
     }
-    // subcribe to get messages sent to this user
-    client.subscribe(`/user/${user.id}/queue/messages`, onMessageReceived);
-    // subcribe to get list of online
-    client.subscribe(`/online`, onMessageReceived);
-    // publish to notify this user is online
-    client.send(
-        '/app/user.addUser',
-        {},
-        JSON.stringify({
-            id: user.id,
-            username: user.username,
-            fullName: user.fullName,
-            status: 'ONLINE'
-        })
-    );
+
+    private onConnected = () => {
+        if (!this.client) return;
+        while (!this.client.connected) {}
+        this.client.subscribe(`/online`, this.onMessageReceived);
+        this.client.subscribe(
+            `/user/${this.username}/queue/messages`,
+            this.onMessageReceived
+        );
+        this.client.send(
+            '/app/user.addUser',
+            {},
+            JSON.stringify({
+                username: this.username,
+                fullName: this.fullName,
+                status: 'ONLINE',
+            })
+        );
+    };
+
+    private onError = (error: string | Frame) => {
+        console.log('Error: ', error);
+    };
+
+    private onMessageReceived = (message: Stomp.Message) => {
+        console.log(`Received: ${message.body}`);
+    };
+
+    public onDisconnected = () => {
+        if (!this.client) return ;
+        console.log(`Disconnected: ${this.client}`);
+        this.client.send(
+            '/app/user.disconnectUser',
+            {},
+            JSON.stringify({
+                username: this.username,
+                fullName: this.fullName,
+                status: 'OFFLINE',
+            })
+        );
+    };
 }
 
-const onError = (error: string | Frame) => {
-    console.log('Error: ', error);
-}
-
-const onMessageReceived = (message: Stomp.Message) => {
-    console.log(`Received: ${message.body}`);
-}
-
-const onDisconnected = () => {
-    let user = {
-        id: 1,
-        username: 'stompjs',
-        fullName: 'stompjs'
-    }
-    client.send(
-        '/app/user.disconnectUser',
-        {},
-        JSON.stringify({
-            id: user.id,
-            username: user.username,
-            fullName: user.fullName,
-            status: 'OFFLINE'
-        })
-    );
-}
-
-export { initWebSockets, onDisconnected }
+export default WebSocketsClient;
