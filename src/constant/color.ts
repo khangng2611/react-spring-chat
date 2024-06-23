@@ -1,4 +1,4 @@
-const COLORS = [
+export const AVATAR_COLORS = [
     "indigo",
     "gray",
     "orange",
@@ -6,4 +6,9 @@ const COLORS = [
     "purple",
 ]
 
-export default COLORS;
+export const TONE_COLORS = {
+    PRIMARY: "#b0206f",
+    PRIMARY_HOVER: "#d43965",
+    SECONDARY: "#5582d7",
+    SECONDARY_HOVER: "#6bb9fb"
+}

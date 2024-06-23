@@ -1,19 +1,11 @@
-import axios from "axios";
+import { apiClient } from "../services/api";
 import { useEffect, useState } from "react";
 
 const useFetch = (url: string) => {
     const [result, setResult] = useState({});
     const getData = async () => {
         try {
-            const API_URL = process.env.REACT_APP_API_URL;
-            let options = {
-                method: 'get',
-                url: `${API_URL}/${url}`,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            };
-            const response = await axios.request(options);
+            const response = await apiClient.get(url);
             setResult(response.data);
         } catch (error: any) {
             if (error.response) {

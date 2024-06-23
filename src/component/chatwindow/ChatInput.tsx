@@ -1,4 +1,5 @@
 import React from "react";
+import { TONE_COLORS } from "../../constant/color";
 
 const ChatInput = ({generateMessage}: {generateMessage: (message: string) => void}) => {
     const [inputValue, setInputValue] = React.useState('');
@@ -13,9 +14,9 @@ const ChatInput = ({generateMessage}: {generateMessage: (message: string) => voi
     }
 
     return (
-        <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4" >
+        <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
             <div>
-                <button className="flex items-center justify-center text-gray-400 hover:text-gray-600" >
+                <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
                     <svg
                         className="w-5 h-5"
                         fill="none"
@@ -67,7 +68,7 @@ const ChatInput = ({generateMessage}: {generateMessage: (message: string) => voi
             </div>
             <div className="ml-4">
                 <button
-                    className="flex items-center justify-center bg-red-500 hover:bg-red-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                    className="flex items-center justify-center rounded-xl bg-sky-600 hover:bg-sky-700 text-white px-4 py-1 flex-shrink-0"
                     onClick={() => handleOnClick()}
                 >
                     <span>Send</span>
