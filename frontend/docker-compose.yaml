@@ -1,0 +1,15 @@
+version: '3'
+services:
+  chatter-box:
+    container_name: chatter-box
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - chatter-box
+
+networks:
+  chatter-box:
+    external: true
