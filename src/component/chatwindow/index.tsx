@@ -2,7 +2,8 @@ import React from "react";
 import ChatContent from "./ChatContent";
 import ChatInput from "./ChatInput";
 
-const ChatWindow = () => {
+const ChatWindow = ({selectedId}: {selectedId: number | null}) => {
+
     const [messages, setMessages] = React.useState([
         {sender: 'atom', content: []}
     ]);

@@ -10,10 +10,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import Loader from "../component/loader"
 import WebSocketsClient from "../services/websockets";
+import { apiClient } from "../services/api";
 
-interface UserDetailsSchema {
-    fullName: string;
+export interface UserDetailsSchema {
+    id: number,
     username: string;
+    fullName: string;
 }
 
 interface StateSchema {
@@ -23,12 +25,19 @@ interface StateSchema {
 
 type LOGIN_FUNC = (credentials: {
     username: string;
-    fullName: string
+    fullName: string;
     password: string;
 }) => Promise<void>;
 
+export interface OnlineListSchema {
+    id: number;
+    username: string;
+    fullName: string;
+}
+
 interface ContextSchema {
     details: UserDetailsSchema | null;
+    newOnlineUser: Array<OnlineListSchema>;
     wsClient: WebSocketsClient | null;
     handleUserLogin: LOGIN_FUNC;
     handleUserLogout: () => Promise<void>;
@@ -36,6 +45,7 @@ interface ContextSchema {
 
 const Context = createContext<ContextSchema>({
     details: null,
+    newOnlineUser: [],
     wsClient: null,
     handleUserLogin: () => Promise.resolve(),
     handleUserLogout: () => Promise.resolve(),
@@ -48,6 +58,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
         isLoading: true,
         details: null,
     });
+    const [newOnlineUser, setNewOnlineUser] = useState<Array<OnlineListSchema>>([]);
     const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
     const location = useLocation();
@@ -56,16 +67,12 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
         async (credentials, redirectPath = "/chat") => {
             let userDetails: UserDetailsSchema | null = null;
             try {
-                //   const response = await apiClient.post("/login", {
-                //     credentials,
-                //   });
-                // userDetails = response.data;
-                userDetails = {
-                    fullName: credentials.fullName,
-                    username: credentials.username,
-                };
+                const response = await apiClient.post("/signin", credentials);
+                userDetails = response.data;
+                if (userDetails === null)
+                    throw new Error("User not found");
                 setState({ isLoading: false, details: userDetails });
-                wsClient.current = new WebSocketsClient(userDetails);
+                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser);
                 localStorage.setItem("session", JSON.stringify(userDetails));
                 navigate(redirectPath, { replace: true });
             } catch (error: unknown) {
@@ -101,7 +108,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
             let session = localStorage.getItem("session");
             if (session) {
                 userDetails = JSON.parse(session);
-                wsClient.current = new WebSocketsClient(userDetails);
+                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser);
                 setState({ isLoading: false, details: userDetails });
                 if (location.pathname === "/login" || location.pathname === "/")
                     navigate("/chat", { replace: true });
@@ -119,7 +126,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
 
     return (
         <Context.Provider
-            value={{ details: state.details, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
+            value={{ details: state.details, newOnlineUser: newOnlineUser, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
         >
             {state.isLoading ? <Loader /> : children}
         </Context.Provider>
