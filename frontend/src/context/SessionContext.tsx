@@ -33,6 +33,7 @@ export interface OnlineListSchema {
     id: number;
     username: string;
     fullName: string;
+    status: "ONLINE" | "OFFLINE";
 }
 
 interface ContextSchema {
