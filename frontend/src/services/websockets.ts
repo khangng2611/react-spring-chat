@@ -46,7 +46,15 @@ class WebSocketsClient {
 
     private onNewOnlineReceived = (message: Stomp.Message) => {
         const content: OnlineListSchema = JSON.parse(message.body);
-        this.newOnlineReceived!.push(content);
+        const existingUser = this.newOnlineReceived!.find(user => user.id === content.id);
+        if (existingUser) {
+            // User already exists, update their information
+            existingUser.username = content.username;
+            existingUser.fullName = content.fullName;
+            existingUser.status = content.status;
+        } else {
+            this.newOnlineReceived!.push(content);
+        }
         this.newOnlineReceived = this.newOnlineReceived?.length ? this.newOnlineReceived?.filter((user) => user.id !== this.id) : null;
         this.setNewOnlineUser(this.newOnlineReceived!);
     };
