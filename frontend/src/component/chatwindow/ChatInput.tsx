@@ -1,5 +1,4 @@
 import React from "react";
-import { TONE_COLORS } from "../../constant/color";
 
 const ChatInput = ({generateMessage}: {generateMessage: (message: string) => void}) => {
     const [inputValue, setInputValue] = React.useState('');

@@ -9,7 +9,8 @@ const ContactList = ({ setSelectedId }: { setSelectedId: (id: number) => void })
   const fetchedOnlineUser = useFetch('users') as Array<OnlineListSchema>;
   useEffect(() => {
     const filteredFetch = fetchedOnlineUser.length ? fetchedOnlineUser.filter(user => user.id !== details?.id) : [];
-    setAllOnlineUser([...newOnlineUser, ...filteredFetch]);
+    const uniqueOnlineUsers = newOnlineUser.filter(user => !filteredFetch.some(fetchUser => fetchUser.id === user.id));
+    setAllOnlineUser([...uniqueOnlineUsers, ...filteredFetch]);
   }, [fetchedOnlineUser, details?.id, newOnlineUser]);
 
   return (
