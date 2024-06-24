@@ -1,9 +1,11 @@
 export const AVATAR_COLORS = [
-    "indigo",
-    "gray",
-    "orange",
-    "pink",
-    "purple",
+    "bg-indigo-200",
+    "bg-gray-200",
+    "bg-orange-200",
+    "bg-pink-200",
+    "bg-purple-200",
+    "bg-amber-300",
+    "bg-green-200"
 ]
 
 export const TONE_COLORS = {

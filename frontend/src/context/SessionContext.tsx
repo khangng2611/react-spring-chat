@@ -29,7 +29,7 @@ type LOGIN_FUNC = (credentials: {
     password: string;
 }) => Promise<void>;
 
-export interface OnlineListSchema {
+export interface OnlineUserSchema {
     id: number;
     username: string;
     fullName: string;
@@ -38,7 +38,7 @@ export interface OnlineListSchema {
 
 interface ContextSchema {
     details: UserDetailsSchema | null;
-    newOnlineUser: Array<OnlineListSchema>;
+    newOnlineUser: Array<OnlineUserSchema>;
     wsClient: WebSocketsClient | null;
     handleUserLogin: LOGIN_FUNC;
     handleUserLogout: () => Promise<void>;
@@ -59,7 +59,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
         isLoading: true,
         details: null,
     });
-    const [newOnlineUser, setNewOnlineUser] = useState<Array<OnlineListSchema>>([]);
+    const [newOnlineUser, setNewOnlineUser] = useState<Array<OnlineUserSchema>>([]);
     const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
     const location = useLocation();

@@ -1,27 +1,24 @@
 import React from "react";
+import { OnlineUserSchema } from "../../context/SessionContext";
+import { AVATAR_COLORS } from "../../constant/color";
 
-const ToMessage = ({ content }: { content: Array<string> }) => {
+const ToMessage = ({ receiver, content }: { receiver: OnlineUserSchema, content: string }) => {
     return (
         <div className="col-start-1 col-end-10 px-3 py-1 rounded-lg">
             <div className="flex flex-row items-end">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-500 flex-shrink-0 text-sm overflow-hidden" >
-                    <img
-                        src="https://static.ybox.vn/2022/5/5/1653618217752-nguyen-nu-anh-thu35zz5xt5-avatar.png"
-                        alt="ATOM"
-                        className="h-full w-full"
-                    />
+                <div className={`flex items-center justify-center h-10 w-10 rounded-full ${AVATAR_COLORS.at(receiver.id%AVATAR_COLORS.length)} flex-shrink-0 text-sm overflow-hidden`} >
+                    {receiver.fullName[0].toUpperCase()}
                 </div>
                 <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl min-w-fit max-w-full" >
                     <p className="break-words" style={{ whiteSpace: "pre-wrap" }}>
-                        {
+                        {content}
+                        {/* {
                             content && content.map((line, id) => (
                                 <span key={id} >
-                                    {/* <span style={{ fontWeight: "bold" }}>{line.split('=')[0]} {line.split('=')[1] ? "=" : ""}</span>
-                                    <span>{line.split('=')[1]}</span> */}
                                     <span dangerouslySetInnerHTML={{ __html: line }}></span>
                                 </span>
                             ))
-                        }
+                        } */}
                     </p>
                 </div>
             </div>

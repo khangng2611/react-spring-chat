@@ -1,26 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChatContent from "./ChatContent";
-import ChatInput from "./ChatInput";
+import ChatInput from "./chatinput";
+import { OnlineUserSchema, useSession } from "../../context/SessionContext";
+import useFetch from "../../hook/useFetch";
 
-const ChatWindow = ({selectedId}: {selectedId: number | null}) => {
+export interface MessageSchema {
+    id: number,
+    roomId: number,
+    senderId: number,
+    receiverId: number,
+    content: string,
+    createdAt: string,
+}
 
-    const [messages, setMessages] = React.useState([
-        {sender: 'atom', content: []}
-    ]);
-    const generateMessage = async (text: string) => {
-        setMessages((prev : any) => prev.concat({ sender: 'me', content: text }));
-        const { request, response } = {
-            request : [],
-            response : []
-        }
-        request && setMessages((prev) => prev.concat({ sender: 'atom', content: request }));
-        setMessages((prev) => prev.concat({ sender: 'atom', content: response }));
+const ChatWindow = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
+    const { details } = useSession();
+    const [messages, setMessages] = useState<Array<MessageSchema>>([]);
+    const fetchedMessages = useFetch(`messages/${details?.id}/${selectedUser.id}`) as Array<MessageSchema>;
+    useEffect(() => {
+        if (fetchedMessages.length)
+            setMessages(fetchedMessages);
+    }, [fetchedMessages, selectedUser]);
+
+    const setNewMessage = async (text: string) => {
+        setMessages((prev: Array<MessageSchema>) => ([...prev, {
+            id: 0,
+            roomId: 0,
+            senderId: details?.id || 0,
+            receiverId: selectedUser.id || 0,
+            content: text,
+            createdAt: new Date().toISOString()
+        }]))
     }
     return (
         <div className="flex flex-col flex-auto h-full py-2 px-6">
             <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4" >
-                <ChatContent messages={messages} />
-                <ChatInput generateMessage={generateMessage} />
+                <ChatContent receiver={selectedUser} messages={messages} />
+                <ChatInput receiver={selectedUser} setNewMessage={setNewMessage} />
             </div>
         </div>
     )

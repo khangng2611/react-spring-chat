@@ -1,8 +1,10 @@
+import { MessageSchema } from ".";
+import { OnlineUserSchema } from "../../context/SessionContext";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef } from 'react'
 
-const ChatContent = ({ messages }: { messages: Array<{ sender: string, content: Array<string> }> }) => {
+const ChatContent = ({ receiver, messages }: { receiver: OnlineUserSchema, messages: Array<MessageSchema> }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -16,13 +18,15 @@ const ChatContent = ({ messages }: { messages: Array<{ sender: string, content: 
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
                 <div className="grid grid-cols-12 gap-y-2">
-                    {messages.map((message, index) => {
-                        return (
-                            message.sender === 'me' ?
-                            (<FromMessage key={index} content={message.content} />) :
-                            (<ToMessage key={index} content={message.content} />)
-                        )
-                    })}
+                    {
+                        messages.length ? messages.map((message, index) => {
+                            return (
+                                message.receiverId === receiver.id ?
+                                    <FromMessage key={index} content={message.content} /> :
+                                    <ToMessage key={index} receiver={receiver} content={message.content} />
+                            )
+                        }) : null
+                    }
                     <div ref={messagesEndRef} />
                     {/* <div className="col-start-1 col-end-8 p-3 rounded-lg">
                         <div className="flex flex-row items-center">

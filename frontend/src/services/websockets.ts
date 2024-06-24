@@ -1,16 +1,16 @@
 import SockJS from 'sockjs-client';
 import Stomp, { Frame, Client } from 'stompjs';
-import { UserDetailsSchema, OnlineListSchema } from '../context/SessionContext';
+import { UserDetailsSchema, OnlineUserSchema } from '../context/SessionContext';
 
 class WebSocketsClient {
     private client: Client | null;
     private id: number | null;
     private username: string | null;
     private fullName: string | null;
-    private newOnlineReceived: Array<OnlineListSchema> | null = null;
-    private setNewOnlineUser: (userList: Array<OnlineListSchema>) => void;
+    private newOnlineReceived: Array<OnlineUserSchema> | null = null;
+    private setNewOnlineUser: (userList: Array<OnlineUserSchema>) => void;
 
-    constructor(userInfo: UserDetailsSchema, setNewOnlineUser: (userList: Array<OnlineListSchema>) => void) {
+    constructor(userInfo: UserDetailsSchema, setNewOnlineUser: (userList: Array<OnlineUserSchema>) => void) {
         this.id = userInfo.id;
         this.username = userInfo.username;
         this.fullName = userInfo.fullName;
@@ -45,7 +45,7 @@ class WebSocketsClient {
     };
 
     private onNewOnlineReceived = (message: Stomp.Message) => {
-        const content: OnlineListSchema = JSON.parse(message.body);
+        const content: OnlineUserSchema = JSON.parse(message.body);
         const existingUser = this.newOnlineReceived!.find(user => user.id === content.id);
         if (existingUser) {
             // User already exists, update their information
@@ -75,12 +75,14 @@ class WebSocketsClient {
         );
     };
 
-    public sendMessage = (message: string) => {
+    public sendMessage = (receiverId: number, message: string) => {
+        if (!receiverId) return;
         this.client?.send(
             '/app/chat',
             {},
             JSON.stringify({
-                sender: this.id,
+                senderId: this.id,
+                receiverId: receiverId,
                 content: message,
             })
         );
