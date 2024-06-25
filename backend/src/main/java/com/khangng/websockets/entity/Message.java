@@ -2,12 +2,14 @@ package com.khangng.websockets.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "message")
 public class Message {
@@ -27,6 +29,6 @@ public class Message {
     @Column(name="content")
     private String content;
     
-    @Column(name="created_at")
+    @Column(name="created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private String createdAt;
 }

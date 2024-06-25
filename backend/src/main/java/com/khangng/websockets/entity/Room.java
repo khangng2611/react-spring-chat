@@ -16,10 +16,10 @@ public class Room {
     @Column(name="id")
     private int id;
     
-    @Column(name="sender_id")
-    private int senderId;
+    @Column(name="first_user_id")
+    private int firstUserId;
     
-    @Column(name="receiver_id")
-    private int receiverId;
+    @Column(name="second_user_id")
+    private int secondUserId;
 
 }

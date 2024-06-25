@@ -14,30 +14,25 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
     
-    public Room getRoom (int senderId, int receiverId, boolean createIfNotExist) {
-        Optional<Room> checkRoom = roomRepository.findBySenderIdAndReceiverId(senderId, receiverId);
+    public Room getRoom (int userId1, int userId2, boolean createIfNotExist) {
+        int firstUserId = Math.min(userId1, userId2);
+        int secondUserId = Math.max(userId1, userId2);
+        Optional<Room> checkRoom = roomRepository.findByFirstUserIdAndSecondUserId(firstUserId, secondUserId);
         if (checkRoom.isPresent()) {
             return checkRoom.get();
         } else {
             if (createIfNotExist) {
-                Room newRoom = createRoom(senderId, receiverId);
+                Room newRoom = createRoom(firstUserId, secondUserId);
                 return newRoom;
             }
             return null;
         }
     }
     
-    private Room createRoom (int senderId, int receiverId) {
-        Room senderReceiver = new Room();
-        senderReceiver.setSenderId(senderId);
-        senderReceiver.setReceiverId(receiverId);
-        
-        Room receiverSender = new Room();
-        receiverSender.setSenderId(senderId);
-        receiverSender.setReceiverId(receiverId);
-        
-        roomRepository.save(senderReceiver);
-        roomRepository.save(receiverSender);
-        return senderReceiver;
+    private Room createRoom (int firstUserId, int secondUserId) {
+        Room newRoom = new Room();
+        newRoom.setFirstUserId(firstUserId);
+        newRoom.setSecondUserId(secondUserId);
+        return roomRepository.save(newRoom);
     }
 }

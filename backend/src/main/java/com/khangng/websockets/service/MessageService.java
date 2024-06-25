@@ -1,5 +1,6 @@
 package com.khangng.websockets.service;
 
+import com.khangng.websockets.dto.SendMessageDto;
 import com.khangng.websockets.entity.Message;
 import com.khangng.websockets.entity.Room;
 import com.khangng.websockets.repository.MessageRepository;
@@ -17,17 +18,21 @@ public class MessageService {
         this.roomService = roomService;
     }
     
-    public Message save(Message message) {
+    public Message save(SendMessageDto message) {
         Room room = roomService.getRoom(
                 message.getSenderId(),
                 message.getReceiverId(),
                 true
         );
         if (room != null) {
-            message.setRoomId(room.getId());
-            return messageRepository.save(message);
+            Message newMessage = Message.builder()
+                .senderId(message.getSenderId())
+                .receiverId(message.getReceiverId())
+                .content(message.getContent())
+                .roomId(room.getId())
+                .build();
+            return messageRepository.save(newMessage);
         }
-        // throw exception
         return null;
     }
     
