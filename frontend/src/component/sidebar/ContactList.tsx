@@ -4,20 +4,20 @@ import { OnlineUserSchema, useSession } from '../../context/SessionContext';
 import useFetch from '../../hook/useFetch';
 
 const ContactList = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUserSchema | null, setSelectedUser: (user: OnlineUserSchema) => void }) => {
-  const { details, newOnlineUser } = useSession();
+  const { details, newOnlineUsers } = useSession();
   const [allOnlineUser, setAllOnlineUser] = useState<Array<OnlineUserSchema>>([])
   const fetchedOnlineUser = useFetch('users') as Array<OnlineUserSchema>;
   useEffect(() => {
     // filter the api fetch user without the self id
     const filteredFetch = fetchedOnlineUser.length ? fetchedOnlineUser.filter(user => user.id !== details?.id) : [];
-    // filter newOnlineUser without the user that already fetched
-    const filteredNewOnlineUser = newOnlineUser.filter(user => !filteredFetch.some(fetchUser => fetchUser.id === user.id));
-    // get all offline users in newOnlineUser
-    const offlineUser = newOnlineUser.filter(user => user.status === 'OFFLINE');
+    // filter newOnlineUsers without the user that already fetched
+    const filteredNewOnlineUser = newOnlineUsers.filter(user => !filteredFetch.some(fetchUser => fetchUser.id === user.id));
+    // get all offline users in newOnlineUsers
+    const offlineUser = newOnlineUsers.filter(user => user.status === 'OFFLINE');
     // fillter [...filteredNewOnlineUser, ...filteredFetch] without offline users
     let offlineRemovedUser = [...filteredNewOnlineUser, ...filteredFetch].filter(user => !offlineUser.some(offline => offline.id === user.id));
     setAllOnlineUser(offlineRemovedUser);
-  }, [fetchedOnlineUser, details?.id, newOnlineUser]);
+  }, [fetchedOnlineUser, details?.id, newOnlineUsers]);
 
   const handleOnCLick = (onlineUser: OnlineUserSchema) => {
     setSelectedUser(onlineUser);

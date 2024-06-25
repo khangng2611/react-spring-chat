@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client';
 import Stomp, { Frame, Client } from 'stompjs';
-import { UserDetailsSchema, OnlineUserSchema } from '../context/SessionContext';
+import { UserDetailsSchema, OnlineUserSchema, MessageSchema } from '../context/SessionContext';
 
 class WebSocketsClient {
     private client: Client | null;
@@ -9,13 +9,21 @@ class WebSocketsClient {
     private fullName: string | null;
     private newOnlineReceived: Array<OnlineUserSchema> | null = null;
     private setNewOnlineUser: (userList: Array<OnlineUserSchema>) => void;
+    private newMessageReceived: Array<MessageSchema> | null = null;
+    private setNewMessage: (message: Array<MessageSchema>) => void;
 
-    constructor(userInfo: UserDetailsSchema, setNewOnlineUser: (userList: Array<OnlineUserSchema>) => void) {
+    constructor(
+        userInfo: UserDetailsSchema, 
+        setNewOnlineUser: (userList: Array<OnlineUserSchema>) => void,
+        setNewMessage: (message: Array<MessageSchema>) => void
+    ) {
         this.id = userInfo.id;
         this.username = userInfo.username;
         this.fullName = userInfo.fullName;
         this.newOnlineReceived = [];
         this.setNewOnlineUser = setNewOnlineUser;
+        this.newMessageReceived = [];
+        this.setNewMessage  = setNewMessage;
         const socket = new SockJS(`${process.env.REACT_APP_BE_URL}/ws` || '');
         this.client = Stomp.over(socket);
         this.client.connect({}, this.onConnected, this.onError);
@@ -60,7 +68,12 @@ class WebSocketsClient {
     };
 
     public onMessageReceived = (message: Stomp.Message) => {
-        console.log(`onMessageReceived: ${message.body}`);
+        const newMessage: MessageSchema = JSON.parse(message.body);
+        const checkIfExisted = this.newMessageReceived!.some(message => message.id === newMessage.id);
+        if (!checkIfExisted) {
+            this.newMessageReceived!.push(newMessage);
+        }
+        this.setNewMessage(this.newMessageReceived!);
     };
 
     public onDisconnected = () => {
@@ -87,10 +100,6 @@ class WebSocketsClient {
             })
         );
     }
-
-    // public getNewOnlineUser = () => {
-    //     return this.newOnlineReceived;
-    // }
 }
 
 export default WebSocketsClient;

@@ -1,5 +1,4 @@
-import { MessageSchema } from ".";
-import { OnlineUserSchema } from "../../context/SessionContext";
+import { OnlineUserSchema, MessageSchema } from "../../context/SessionContext";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef } from 'react'

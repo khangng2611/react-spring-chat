@@ -1,11 +1,19 @@
 import React from "react";
-import { OnlineUserSchema, useSession } from "../../../context/SessionContext";
+import { MessageSchema, OnlineUserSchema, useSession } from "../../../context/SessionContext";
 import SendBtn from "./SendBtn";
 import AttachBtn from "./AttachBtn";
 import IconBtn from "./IconBtn";
 
-const ChatInput = ({ receiver, setNewMessage }: { receiver: OnlineUserSchema, setNewMessage: (content: string) => void }) => {
-    const { wsClient } = useSession();
+const ChatInput = (
+    {
+        receiver,
+        setMessages
+    }: {
+        receiver: OnlineUserSchema,
+        setMessages: (callback: (prev: Array<MessageSchema>) => Array<MessageSchema> ) => void
+    }
+) => {
+    const { details, wsClient } = useSession();
     const [inputContent, setInputContent] = React.useState('');
     const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputContent(e.target.value);
@@ -16,6 +24,17 @@ const ChatInput = ({ receiver, setNewMessage }: { receiver: OnlineUserSchema, se
         setNewMessage(inputContent);
         wsClient?.sendMessage(receiver.id, inputContent);
         setInputContent('');
+    }
+
+    const setNewMessage = async (text: string) => {
+        setMessages((prev: Array<MessageSchema>) => ([...prev, {
+            id: 0,
+            roomId: 0,
+            senderId: details?.id || 0,
+            receiverId: receiver.id,
+            content: text,
+            createdAt: new Date().toISOString()
+        }]))
     }
 
     return (

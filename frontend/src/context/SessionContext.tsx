@@ -36,9 +36,19 @@ export interface OnlineUserSchema {
     status: "ONLINE" | "OFFLINE";
 }
 
+export interface MessageSchema {
+    id: number,
+    roomId: number,
+    senderId: number,
+    receiverId: number,
+    content: string,
+    createdAt: string,
+}
+
 interface ContextSchema {
     details: UserDetailsSchema | null;
-    newOnlineUser: Array<OnlineUserSchema>;
+    newOnlineUsers: Array<OnlineUserSchema>;
+    newMessages: Array<MessageSchema>;
     wsClient: WebSocketsClient | null;
     handleUserLogin: LOGIN_FUNC;
     handleUserLogout: () => Promise<void>;
@@ -46,7 +56,8 @@ interface ContextSchema {
 
 const Context = createContext<ContextSchema>({
     details: null,
-    newOnlineUser: [],
+    newOnlineUsers: [],
+    newMessages: [],
     wsClient: null,
     handleUserLogin: () => Promise.resolve(),
     handleUserLogout: () => Promise.resolve(),
@@ -59,7 +70,8 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
         isLoading: true,
         details: null,
     });
-    const [newOnlineUser, setNewOnlineUser] = useState<Array<OnlineUserSchema>>([]);
+    const [newOnlineUsers, setNewOnlineUser] = useState<Array<OnlineUserSchema>>([]);
+    const [newMessages, setNewMessages] = useState<Array<MessageSchema>>([]);
     const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
     const location = useLocation();
@@ -73,7 +85,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
                 if (userDetails === null)
                     throw new Error("User not found");
                 setState({ isLoading: false, details: userDetails });
-                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser);
+                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser, setNewMessages);
                 localStorage.setItem("session", JSON.stringify(userDetails));
                 navigate(redirectPath, { replace: true });
             } catch (error: unknown) {
@@ -109,7 +121,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
             let session = localStorage.getItem("session");
             if (session) {
                 userDetails = JSON.parse(session);
-                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser);
+                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser, setNewMessages);
                 setState({ isLoading: false, details: userDetails });
                 if (location.pathname === "/login" || location.pathname === "/")
                     navigate("/chat", { replace: true });
@@ -127,7 +139,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
 
     return (
         <Context.Provider
-            value={{ details: state.details, newOnlineUser: newOnlineUser, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
+            value={{ details: state.details, newOnlineUsers: newOnlineUsers, newMessages: newMessages, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
         >
             {state.isLoading ? <Loader /> : children}
         </Context.Provider>
