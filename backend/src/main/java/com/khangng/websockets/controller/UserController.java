@@ -23,14 +23,12 @@ public class UserController {
     }
     
     @MessageMapping("/user.addUser")
-//     @SendTo("/user/public")
     @SendTo("/online")
     public User addUser(@Payload  User user) {
         return userService.connect(user);
     }
     
     @MessageMapping("/user.disconnectUser")
-    // @SendTo("/user/public")
     @SendTo("/online")
     public User disconnect(@Payload  User user) {
         return userService.disconnect(user);

@@ -1,11 +1,14 @@
 package com.khangng.websockets.controller;
 
-import com.khangng.websockets.dto.SendMessageDto;
-import com.khangng.websockets.entity.Message;
+import com.khangng.websockets.dto.PrivateMessageDto;
+import com.khangng.websockets.dto.PublicMessageDto;
+import com.khangng.websockets.entity.PrivateMessage;
+import com.khangng.websockets.entity.PublicMessage;
 import com.khangng.websockets.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +31,9 @@ public class MessageController {
     }
     
     
-    @MessageMapping("/chat")
-    public void sendMessage(@Payload SendMessageDto message) {
-        Message savedMessage = messageService.save(message);
+    @MessageMapping("/chat/private")
+    public void sendMessage(@Payload PrivateMessageDto message) {
+        PrivateMessage savedMessage = messageService.save(message);
         simpMessagingTemplate.convertAndSendToUser(
             String.valueOf(savedMessage.getReceiverId()),
             "/queue/messages",
@@ -38,8 +41,15 @@ public class MessageController {
         );
     }
     
+    @MessageMapping("/chat/public")
+    @SendTo("/public")
+    public void sendMessage(@Payload PublicMessageDto message) {
+        PublicMessage savedMessage = messageService.save(message);
+
+    }
+    
     @GetMapping("/messages/{senderId}/{receiverId}")
-    public List<Message> getMessages(@PathVariable int senderId, @PathVariable int receiverId) {
+    public List<PrivateMessage> getMessages(@PathVariable int senderId, @PathVariable int receiverId) {
         return messageService.getMessages(senderId, receiverId);
     }
 }

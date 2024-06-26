@@ -17,7 +17,7 @@ import java.util.List;
 public class WebSocketsConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/user", "/online");
+        registry.enableSimpleBroker("/user", "/online", "/public");
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
     }

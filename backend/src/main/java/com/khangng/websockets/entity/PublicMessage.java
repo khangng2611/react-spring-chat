@@ -12,20 +12,14 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "message")
-public class Message {
+@Table(name = "public_message")
+public class PublicMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
-    @Column(name="room_id")
-    private int roomId;
-    
     @Column(name="sender_id")
     private int senderId;
-    
-    @Column(name="receiver_id")
-    private int receiverId;
     
     @Column(name="content", length = 1000)
     private String content;
