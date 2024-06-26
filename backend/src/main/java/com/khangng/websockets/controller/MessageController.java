@@ -43,8 +43,9 @@ public class MessageController {
     
     @MessageMapping("/chat/public")
     @SendTo("/public")
-    public void sendMessage(@Payload PublicMessageDto message) {
+    public PublicMessage sendMessage(@Payload PublicMessageDto message) {
         PublicMessage savedMessage = messageService.save(message);
+        return savedMessage;
 
     }
     
