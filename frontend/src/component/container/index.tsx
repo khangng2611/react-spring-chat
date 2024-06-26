@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import Sidebar from '../sidebar';
 import ChatWindow from '../chatwindow';
 import { OnlineUserSchema } from '../../constant/schema';
-import WebsocketsContextProvider from '../../context/WebsocketsContext';
+import { useWebsockets } from '../../context/WebsocketsContext';
 
 const Container = () => {
     const [selectedUser, setSelectedUser] = useState<OnlineUserSchema | null>(null);
+    const { onDisconnected } = useWebsockets();
+
+    window.onbeforeunload = () => {
+        if (onDisconnected) {
+            onDisconnected();
+        }
+    };
 
     return (
-        <WebsocketsContextProvider>
-            <div className="flex h-screen antialiased text-gray-800">
-                <div className="flex flex-row h-full w-full overflow-x-hidden">
-                    <Sidebar selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-                    {selectedUser && <ChatWindow selectedUser={selectedUser} />}
-                </div>
+        <div className="flex h-screen antialiased text-gray-800">
+            <div className="flex flex-row h-full w-full overflow-x-hidden">
+                <Sidebar selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                {selectedUser && <ChatWindow selectedUser={selectedUser} />}
             </div>
-        </WebsocketsContextProvider>
+        </div>
     );
 };
 
