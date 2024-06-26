@@ -1,19 +1,12 @@
 import React from "react";
-import { MessageSchema, OnlineUserSchema, useSession } from "../../../context/SessionContext";
+import { MessageSchema, OnlineUserSchema } from "../../../constant/schema";
 import SendBtn from "./SendBtn";
 import AttachBtn from "./AttachBtn";
 import IconBtn from "./IconBtn";
+import { useWebsockets } from "../../../context/WebsocketsContext";
 
-const ChatInput = (
-    {
-        receiver,
-        setMessages
-    }: {
-        receiver: OnlineUserSchema,
-        setMessages: (callback: (prev: Array<MessageSchema>) => Array<MessageSchema> ) => void
-    }
-) => {
-    const { details, wsClient } = useSession();
+const ChatInput = ({ selectedUser, setMessages }: { selectedUser: OnlineUserSchema, setMessages: React.Dispatch<React.SetStateAction<MessageSchema[]>> }) => {
+    const { sendMessage } = useWebsockets();
     const [inputContent, setInputContent] = React.useState('');
     const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputContent(e.target.value);
@@ -21,20 +14,9 @@ const ChatInput = (
 
     const handleOnClick = () => {
         if (!inputContent || !inputContent.trim()) return;
-        setNewMessage(inputContent);
-        wsClient?.sendMessage(receiver.id, inputContent);
+        sendMessage(selectedUser.id, inputContent);
+        // setMessages((prev) => [...prev, { receiverId: selectedUser.id, content: inputContent }]);
         setInputContent('');
-    }
-
-    const setNewMessage = async (text: string) => {
-        setMessages((prev: Array<MessageSchema>) => ([...prev, {
-            id: 0,
-            roomId: 0,
-            senderId: details?.id || 0,
-            receiverId: receiver.id,
-            content: text,
-            createdAt: new Date().toISOString()
-        }]))
     }
 
     return (

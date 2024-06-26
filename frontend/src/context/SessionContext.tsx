@@ -3,21 +3,21 @@ import React, {
     useCallback,
     useContext,
     useEffect,
-    useRef,
     useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import Loader from "../component/loader"
-import WebSocketsClient from "../services/websockets";
 import { apiClient } from "../services/api";
+import { UserDetailsSchema } from "../constant/schema";
 
-export interface UserDetailsSchema {
-    id: number,
-    username: string;
-    fullName: string;
+interface ContextSchema {
+    details: UserDetailsSchema | null;
+    // onlineUsers: Array<OnlineUserSchema>;
+    // wsClient: WebSocketsClient | null;
+    handleUserLogin: LOGIN_FUNC;
+    handleUserLogout: () => Promise<void>;
 }
-
 interface StateSchema {
     isLoading: boolean;
     details: UserDetailsSchema | null;
@@ -29,50 +29,24 @@ type LOGIN_FUNC = (credentials: {
     password: string;
 }) => Promise<void>;
 
-export interface OnlineUserSchema {
-    id: number;
-    username: string;
-    fullName: string;
-    status: "ONLINE" | "OFFLINE";
-}
-
-export interface MessageSchema {
-    id: number,
-    roomId: number,
-    senderId: number,
-    receiverId: number,
-    content: string,
-    createdAt: string,
-}
-
-interface ContextSchema {
-    details: UserDetailsSchema | null;
-    newOnlineUsers: Array<OnlineUserSchema>;
-    newMessages: Array<MessageSchema>;
-    wsClient: WebSocketsClient | null;
-    handleUserLogin: LOGIN_FUNC;
-    handleUserLogout: () => Promise<void>;
-}
-
-const Context = createContext<ContextSchema>({
+const SessionContext = createContext<ContextSchema>({
     details: null,
-    newOnlineUsers: [],
-    newMessages: [],
-    wsClient: null,
+    // onlineUsers: [],
+    // wsClient: null,
     handleUserLogin: () => Promise.resolve(),
     handleUserLogout: () => Promise.resolve(),
 });
 
-const SessionContext: React.FC<{ children: React.ReactNode }> = ({
+const SessionContextProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
     const [state, setState] = useState<StateSchema>({
         isLoading: true,
         details: null,
     });
-    const [newOnlineUsers, setNewOnlineUser] = useState<Array<OnlineUserSchema>>([]);
-    const [newMessages, setNewMessages] = useState<Array<MessageSchema>>([]);
-    const wsClient = useRef(WebSocketsClient.prototype);
+    // const [onlineUsers, setOnlineUsers] = useState<Array<OnlineUserSchema>>([]);
+    // const [wsClient, setWsClient] = useState<WebSocketsClient | null>(null);
+    // // const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -85,7 +59,8 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
                 if (userDetails === null)
                     throw new Error("User not found");
                 setState({ isLoading: false, details: userDetails });
-                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser, setNewMessages);
+                // const wsClient = new WebSocketsClient(userDetails, setOnlineUsers);
+                // setWsClient(wsClient);
                 localStorage.setItem("session", JSON.stringify(userDetails));
                 navigate(redirectPath, { replace: true });
             } catch (error: unknown) {
@@ -104,7 +79,7 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
             try {
                 // await apiClient.post("/logout");
                 localStorage.removeItem("session");
-                wsClient?.current.onDisconnected();
+                // wsClient?.onDisconnected();
             } finally {
                 navigate("/login", { replace: true });
             }  // eslint-disable-next-line
@@ -121,7 +96,8 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
             let session = localStorage.getItem("session");
             if (session) {
                 userDetails = JSON.parse(session);
-                wsClient.current = new WebSocketsClient(userDetails, setNewOnlineUser, setNewMessages);
+                // const wsClient = new WebSocketsClient(userDetails, setOnlineUsers);
+                // setWsClient(wsClient);
                 setState({ isLoading: false, details: userDetails });
                 if (location.pathname === "/login" || location.pathname === "/")
                     navigate("/chat", { replace: true });
@@ -134,18 +110,19 @@ const SessionContext: React.FC<{ children: React.ReactNode }> = ({
     );
 
     useEffect(() => {
+        console.log("SessionContextProvider");
         handleIfUserAuthenticated(); // eslint-disable-next-line
     }, []);
 
     return (
-        <Context.Provider
-            value={{ details: state.details, newOnlineUsers: newOnlineUsers, newMessages: newMessages, wsClient: wsClient.current, handleUserLogin, handleUserLogout, }}
+        <SessionContext.Provider
+            value={{ details: state.details, handleUserLogin, handleUserLogout, }}
         >
             {state.isLoading ? <Loader /> : children}
-        </Context.Provider>
+        </SessionContext.Provider>
     );
 };
 
-export const useSession = () => useContext(Context);
+export const useSession = () => useContext(SessionContext);
 
-export default SessionContext;
+export default SessionContextProvider;

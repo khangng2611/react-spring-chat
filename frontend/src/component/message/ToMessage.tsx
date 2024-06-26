@@ -1,5 +1,5 @@
 import React from "react";
-import { OnlineUserSchema } from "../../context/SessionContext";
+import { OnlineUserSchema } from "../../constant/schema";
 import { AVATAR_COLORS } from "../../constant/color";
 
 const ToMessage = ({ receiver, content }: { receiver: OnlineUserSchema, content: string }) => {

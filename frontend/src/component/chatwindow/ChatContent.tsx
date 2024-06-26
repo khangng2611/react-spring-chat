@@ -1,15 +1,15 @@
-import { OnlineUserSchema, MessageSchema } from "../../context/SessionContext";
+import { OnlineUserSchema, MessageSchema } from "../../constant/schema";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef } from 'react'
 
-const ChatContent = ({ receiver, messages }: { receiver: OnlineUserSchema, messages: Array<MessageSchema> }) => {
+const ChatContent = ({ selectedUser, messages }: { selectedUser: OnlineUserSchema, messages: Array<MessageSchema> }) => {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
-
     useEffect(() => {
+        console.log("Use Effect - ChatContent")
         scrollToBottom()
     }, [messages]);
 
@@ -20,9 +20,9 @@ const ChatContent = ({ receiver, messages }: { receiver: OnlineUserSchema, messa
                     {
                         messages.length ? messages.map((message, index) => {
                             return (
-                                message.receiverId === receiver.id ?
+                                message.receiverId === selectedUser.id ?
                                     <FromMessage key={index} content={message.content} /> :
-                                    <ToMessage key={index} receiver={receiver} content={message.content} />
+                                    <ToMessage key={index} receiver={selectedUser} content={message.content} />
                             )
                         }) : null
                     }

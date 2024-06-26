@@ -3,7 +3,7 @@ import SignOutBtn from "./SignOutBtn";
 import ContactList from "./ContactList";
 import UserInfo from "./UserInfo";
 import SidebarLogo from "./SidebarLogo";
-import { OnlineUserSchema } from "../../context/SessionContext";
+import { OnlineUserSchema } from "../../constant/schema";
 
 const Sidebar = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUserSchema | null, setSelectedUser: (user: OnlineUserSchema) => void }) => {
     return (
