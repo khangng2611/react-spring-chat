@@ -27,7 +27,7 @@ public class Message {
     @Column(name="receiver_id")
     private int receiverId;
     
-    @Column(name="content")
+    @Column(name="content", length = 1000)
     private String content;
     
     @Column(name="created_at")
