@@ -1,11 +1,11 @@
 import React from "react";
-import { MessageSchema, OnlineUserSchema } from "../../../constant/schema";
+import { OnlineUserSchema } from "../../../constant/schema";
 import SendBtn from "./SendBtn";
 import AttachBtn from "./AttachBtn";
 import IconBtn from "./IconBtn";
 import { useWebsockets } from "../../../context/WebsocketsContext";
 
-const ChatInput = ({ selectedUser, setMessages }: { selectedUser: OnlineUserSchema, setMessages: React.Dispatch<React.SetStateAction<MessageSchema[]>> }) => {
+const ChatInput = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
     const { sendMessage } = useWebsockets();
     const [inputContent, setInputContent] = React.useState('');
     const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -15,7 +15,6 @@ const ChatInput = ({ selectedUser, setMessages }: { selectedUser: OnlineUserSche
     const handleOnClick = () => {
         if (!inputContent || !inputContent.trim()) return;
         sendMessage(selectedUser.id, inputContent);
-        // setMessages((prev) => [...prev, { receiverId: selectedUser.id, content: inputContent }]);
         setInputContent('');
     }
 
@@ -28,6 +27,7 @@ const ChatInput = ({ selectedUser, setMessages }: { selectedUser: OnlineUserSche
                         type="text"
                         className="flex w-full border rounded-xl focus:outline-none focus:border-blue-400 pl-4 h-10"
                         value={inputContent}
+                        maxLength={1000}
                         onChange={handleInputChange}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {

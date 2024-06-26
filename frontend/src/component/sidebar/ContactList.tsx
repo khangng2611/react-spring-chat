@@ -8,7 +8,6 @@ const ContactList = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUs
   const onlineUsersArray = Array.from(onlineUsers.values()).flat();
 
   useEffect(() => {
-    console.log("useEffect - ContactList", onlineUsers);
   }, [onlineUsers])
 
   const handleOnCLick = (onlineUser: OnlineUserSchema) => {

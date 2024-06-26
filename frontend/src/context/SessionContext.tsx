@@ -110,7 +110,6 @@ const SessionContextProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     useEffect(() => {
-        console.log("SessionContextProvider");
         handleIfUserAuthenticated(); // eslint-disable-next-line
     }, []);
 

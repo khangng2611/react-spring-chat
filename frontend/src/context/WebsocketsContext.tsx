@@ -13,8 +13,8 @@ interface WebSocketContextSchema {
 }
 
 const WebSocketsContext = createContext<WebSocketContextSchema>({
-    onlineUsers: new Map(),
-    privateMessages: new Map(),
+    onlineUsers: new Map<number, Array<OnlineUserSchema>>(),
+    privateMessages: new Map<number, Array<MessageSchema>>(),
     onDisconnected: () => { },
     sendMessage: () => { }
 });
@@ -24,15 +24,13 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     const { details } = useSession();
     const wsClient = useRef<Client | null>(null);
-    // const [onlineUsers, setOnlineUsers] = useState<Array<OnlineUserSchema>>([]);
     const [onlineUsers, setOnlineUsers] = useState(new Map());
     const [privateMessages, setPrivateMessages] = useState(new Map());
 
     useEffect(() => {
         if (details !== null && !wsClient.current) {
-            console.log("Use Effect - WebsocketsContextProvider");
             connect(details)
-        }
+        } // eslint-disable-next-line
     }, [details])
 
     async function connect(userDetails: UserDetailsSchema) {

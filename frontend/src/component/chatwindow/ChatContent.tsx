@@ -1,24 +1,28 @@
 import { OnlineUserSchema, MessageSchema } from "../../constant/schema";
+import { useWebsockets } from "../../context/WebsocketsContext";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-const ChatContent = ({ selectedUser, messages }: { selectedUser: OnlineUserSchema, messages: Array<MessageSchema> }) => {
+const ChatContent = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
+    const { privateMessages } = useWebsockets();
+    const [messages, setMessages] = useState<Array<MessageSchema>>([]);
+    
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
     useEffect(() => {
-        console.log("Use Effect - ChatContent")
-        scrollToBottom()
-    }, [messages]);
+        setMessages(privateMessages.get(selectedUser.id) || []);
+        scrollToBottom();
+    }, [selectedUser, privateMessages])
 
     return (
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
                 <div className="grid grid-cols-12 gap-y-2">
                     {
-                        messages.length ? messages.map((message, index) => {
+                        messages.length ? messages.map((message: MessageSchema, index: number) => {
                             return (
                                 message.receiverId === selectedUser.id ?
                                     <FromMessage key={index} content={message.content} /> :

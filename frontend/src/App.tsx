@@ -13,8 +13,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/chat" element={(
+            <WebsocketsContextProvider>
               <Container />
-          )} />
+            </WebsocketsContextProvider>
+          )}
+          />
         </Routes>
       </SessionContextProvider>
     </Router>

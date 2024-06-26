@@ -35,6 +35,8 @@ const Login = () => {
                         name="fullName"
                         type="text"
                         value={userInfo.fullName}
+                        minLength={6}
+                        maxLength={100}
                         onChange={handleFormChange}
                     />
                 </div>
@@ -47,6 +49,8 @@ const Login = () => {
                         name="username"
                         type="text"
                         value={userInfo.username}
+                        minLength={6}
+                        maxLength={100}
                         onChange={handleFormChange}
                     />
                 </div>
@@ -59,6 +63,7 @@ const Login = () => {
                         name="password"
                         type="password"
                         value={userInfo.password}
+                        minLength={6}
                         onChange={handleFormChange}
                     />
                 </div>
