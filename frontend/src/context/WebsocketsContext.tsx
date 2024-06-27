@@ -9,7 +9,7 @@ interface WebSocketContextSchema {
     onlineUsers: Map<number, UserSchema>;
     onDisconnected?: () => void;
     privateMessages: Map<number, Array<MessageSchema>>;
-    sendPrivateMessage: (receiverId: number, message: string) => void;
+    sendPrivateMessage: (receiver: UserSchema, message: string) => void;
     publicMessages: Array<MessageSchema>;
     sendPublicMessage: (message: string) => void;
 }
@@ -130,7 +130,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const onPrivateMessageReceived = (message: Stomp.Message) => {
         const newMessage: MessageSchema = JSON.parse(message.body);
-        const sender = onlineUsers.get(newMessage.senderId);
+        const sender = onlineUsers.get(newMessage.sender.id);
         if (!sender) return;
         if (!privateMessages.get(sender.id))
             privateMessages.set(sender.id, [])
@@ -140,35 +140,35 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const onPublicMessageReceived = (message: Stomp.Message) => {
         const newMessage: MessageSchema = JSON.parse(message.body);
-        const sender = onlineUsers.get(newMessage.senderId);
+        const sender = onlineUsers.get(newMessage.sender.id);
         if (!sender) return;
         setPublicMessages((prev: Array<MessageSchema>) => [...prev, newMessage]);
     };
 
-    const sendPrivateMessage = async (receiverId: number, message: string) => {
-        if (!receiverId) return;
+    const sendPrivateMessage = async (receiver: UserSchema, message: string) => {
+        if (!receiver) return;
         wsClient.current?.send(
             '/app/chat/private',
             {},
             JSON.stringify({
-                senderId: details?.id,
-                receiverId: receiverId,
+                sender: details!,
+                receiver: receiver,
                 content: message,
             })
         );
         const newMessage: MessageSchema = {
-            senderId: details!.id,
-            receiverId: receiverId,
+            sender: details!,
+            receiver: receiver,
             content: message,
             id: undefined,
             roomId: undefined,
             createdAt: undefined,
         }
-        const senderChat = onlineUsers.get(receiverId);
+        const senderChat = onlineUsers.get(receiver.id);
         if (!senderChat) return;
-        if (!privateMessages.get(receiverId))
-            privateMessages.set(receiverId, [])
-        privateMessages.get(receiverId).push(newMessage);
+        if (!privateMessages.get(receiver.id))
+            privateMessages.set(receiver.id, [])
+        privateMessages.get(receiver.id).push(newMessage);
         setPrivateMessages(new Map(privateMessages));
     }
 
@@ -182,9 +182,9 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
             })
         );
         const newMessage: MessageSchema = {
-            senderId: details?.id || 0,
+            sender: details!,
             content: message,
-            receiverId: undefined,
+            receiver: undefined,
             id: undefined,
             roomId: undefined,
             createdAt: undefined,

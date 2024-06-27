@@ -16,7 +16,7 @@ const ChatInput = ({ selectedUser }: { selectedUser: UserSchema }) => {
         if (!inputContent || !inputContent.trim()) return;
         if (selectedUser.id === -1)
             sendPublicMessage(inputContent);
-        else sendPrivateMessage(selectedUser.id, inputContent);
+        else sendPrivateMessage(selectedUser, inputContent);
         setInputContent('');
     }
 

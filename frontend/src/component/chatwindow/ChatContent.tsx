@@ -28,7 +28,7 @@ const ChatContent = ({ selectedUser }: { selectedUser: UserSchema }) => {
                     {
                         messages.length ? messages.map((message: MessageSchema, index: number) => {
                             return (
-                                message.senderId === details?.id ?
+                                message.sender.id === details?.id ?
                                     <FromMessage key={index} message={message} /> :
                                     <ToMessage key={index} message={message} />
                             )

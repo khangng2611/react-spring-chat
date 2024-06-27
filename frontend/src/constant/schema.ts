@@ -9,8 +9,8 @@ export interface UserSchema {
 export interface MessageSchema {
     id: number | undefined,
     roomId: number | undefined,
-    senderId: number,
-    receiverId: number | undefined,
+    sender: UserSchema,
+    receiver: UserSchema | undefined,
     content: string,
     createdAt: string | undefined,
 }
