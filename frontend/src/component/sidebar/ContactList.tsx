@@ -18,7 +18,7 @@ const ContactList = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUs
     <div className="flex flex-col mt-8 flex-1">
       <div className="flex flex-row items-center justify-between text-xs">
         <span className="font-bold">Active Friends</span>
-        <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{onlineUsersArray.length}</span>
+        <span className="flex items-center justify-center bg-green-400 h-4 w-4 p-3 rounded-full">{onlineUsersArray.length}</span>
       </div>
       <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
         {onlineUsersArray.length > 0 && onlineUsersArray.map((onlineUser) => (

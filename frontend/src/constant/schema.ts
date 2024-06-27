@@ -13,10 +13,10 @@ export interface OnlineUserSchema {
 }
 
 export interface MessageSchema {
-    id: number,
-    roomId: number,
+    id: number | undefined,
+    roomId: number | undefined,
     senderId: number,
-    receiverId: number,
+    receiverId: number | undefined,
     content: string,
-    createdAt: string,
+    createdAt: string | undefined,
 }

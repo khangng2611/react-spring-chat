@@ -7,16 +7,20 @@ import { getAllMessages, getOnlineUsers } from "../services/api";
 
 interface WebSocketContextSchema {
     onlineUsers: Map<number, Array<OnlineUserSchema>>;
-    privateMessages: Map<number, Array<MessageSchema>>;
     onDisconnected?: () => void;
-    sendMessage: (receiverId: number, message: string) => void;
+    privateMessages: Map<number, Array<MessageSchema>>;
+    sendPrivateMessage: (receiverId: number, message: string) => void;
+    publicMessages: Array<MessageSchema>;
+    sendPublicMessage: (message: string) => void;
 }
 
 const WebSocketsContext = createContext<WebSocketContextSchema>({
     onlineUsers: new Map<number, Array<OnlineUserSchema>>(),
-    privateMessages: new Map<number, Array<MessageSchema>>(),
     onDisconnected: () => { },
-    sendMessage: () => { }
+    privateMessages: new Map<number, Array<MessageSchema>>(),
+    sendPrivateMessage: () => { },
+    publicMessages:  [],
+    sendPublicMessage: () => { }
 });
 
 const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -26,6 +30,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const wsClient = useRef<Client | null>(null);
     const [onlineUsers, setOnlineUsers] = useState(new Map());
     const [privateMessages, setPrivateMessages] = useState(new Map());
+    const [publicMessages, setPublicMessages] = useState<Array<MessageSchema>>([]);
 
     useEffect(() => {
         if (details !== null && !wsClient.current) {
@@ -53,14 +58,22 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const onConnected = () => {
         if (!wsClient.current) return;
         while (!wsClient.current.connected) { }
+        // listen new user queue
         wsClient.current.subscribe(
             '/online',
             onNewOnlineReceived
         );
+        // listen private message queue
         wsClient.current.subscribe(
             `/user/${details?.id}/queue/messages`,
-            onMessageReceived
+            onPrivateMessageReceived
         );
+        // listen public message queue
+        wsClient.current.subscribe(
+            `/public`,
+            onPublicMessageReceived
+        );
+
         wsClient.current.send(
             '/app/user.addUser',
             {},
@@ -74,6 +87,18 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const onError = (error: string | Frame) => {
         console.log('Error: ', error);
+    };
+
+    const onDisconnected = () => {
+        wsClient.current?.send(
+            '/app/user.disconnectUser',
+            {},
+            JSON.stringify({
+                id: details?.id,
+                username: details?.username,
+                fullName: details?.fullName,
+            })
+        );
     };
 
     const onNewOnlineReceived = async (message: Stomp.Message) => {
@@ -103,7 +128,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
         setOnlineUsers(new Map(onlineUsers));
     };
 
-    const onMessageReceived = (message: Stomp.Message) => {
+    const onPrivateMessageReceived = (message: Stomp.Message) => {
         const newMessage: MessageSchema = JSON.parse(message.body);
         const sender = onlineUsers.get(newMessage.senderId);
         if (!sender) return;
@@ -113,22 +138,17 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
         setPrivateMessages(new Map(privateMessages));
     };
 
-    const onDisconnected = () => {
-        wsClient.current?.send(
-            '/app/user.disconnectUser',
-            {},
-            JSON.stringify({
-                id: details?.id,
-                username: details?.username,
-                fullName: details?.fullName,
-            })
-        );
+    const onPublicMessageReceived = (message: Stomp.Message) => {
+        const newMessage: MessageSchema = JSON.parse(message.body);
+        const sender = onlineUsers.get(newMessage.senderId);
+        if (!sender) return;
+        setPublicMessages([...publicMessages, newMessage]);
     };
 
-    const sendMessage = async (receiverId: number, message: string) => {
+    const sendPrivateMessage = async (receiverId: number, message: string) => {
         if (!receiverId) return;
         wsClient.current?.send(
-            '/app/chat',
+            '/app/chat/private',
             {},
             JSON.stringify({
                 senderId: details?.id,
@@ -137,12 +157,12 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
             })
         );
         const newMessage: MessageSchema = {
-            id: 0,
-            roomId: 0,
             senderId: details?.id || 0,
             receiverId: receiverId,
             content: message,
-            createdAt: new Date().toISOString()
+            id: undefined,
+            roomId: undefined,
+            createdAt: undefined,
         }
         const senderChat = onlineUsers.get(receiverId);
         if (!senderChat) return;
@@ -152,12 +172,34 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
         setPrivateMessages(new Map(privateMessages));
     }
 
+    const sendPublicMessage = async (message: string) => {
+        wsClient.current?.send(
+            '/app/chat/public',
+            {},
+            JSON.stringify({
+                senderId: details?.id,
+                content: message,
+            })
+        );
+        const newMessage: MessageSchema = {
+            senderId: details?.id || 0,
+            content: message,
+            receiverId: undefined,
+            id: undefined,
+            roomId: undefined,
+            createdAt: undefined,
+        }
+        setPublicMessages([...publicMessages, newMessage]);
+    }
+
     return (
         <WebSocketsContext.Provider value={{
             onlineUsers,
-            privateMessages,
             onDisconnected,
-            sendMessage,
+            privateMessages,
+            sendPrivateMessage,
+            publicMessages,
+            sendPublicMessage,
         }}>
             {children}
         </WebSocketsContext.Provider>

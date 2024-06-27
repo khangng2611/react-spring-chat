@@ -6,7 +6,7 @@ import IconBtn from "./IconBtn";
 import { useWebsockets } from "../../../context/WebsocketsContext";
 
 const ChatInput = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
-    const { sendMessage } = useWebsockets();
+    const { sendPrivateMessage } = useWebsockets();
     const [inputContent, setInputContent] = React.useState('');
     const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setInputContent(e.target.value);
@@ -14,7 +14,7 @@ const ChatInput = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
 
     const handleOnClick = () => {
         if (!inputContent || !inputContent.trim()) return;
-        sendMessage(selectedUser.id, inputContent);
+        sendPrivateMessage(selectedUser.id, inputContent);
         setInputContent('');
     }
 
