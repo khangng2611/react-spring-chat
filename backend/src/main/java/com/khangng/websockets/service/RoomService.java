@@ -19,8 +19,8 @@ public class RoomService {
     
     public Room getRoom (int userId1, int userId2, boolean createIfNotExist) {
         int firstUserId = Math.min(userId1, userId2);
-        int secondUserId = Math.max(userId1, userId2);
         User firstUser = userService.find(firstUserId);
+        int secondUserId = Math.max(userId1, userId2);
         User secondUser = userService.find(secondUserId);
         Optional<Room> checkRoom = roomRepository.findByFirstUserAndSecondUser(firstUser, secondUser);
         if (checkRoom.isPresent())
