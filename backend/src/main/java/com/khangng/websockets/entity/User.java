@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -20,8 +19,8 @@ public class User {
     @Column(name="username")
     private String username;
     
-    @Column(name="password")
-    private String password;
+//    @Column(name="password")
+//    private String password;
     
     @Column(name="full_name")
     private String fullName;

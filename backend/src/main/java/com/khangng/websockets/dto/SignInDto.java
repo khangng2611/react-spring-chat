@@ -6,5 +6,5 @@ import lombok.Data;
 public class SignInDto {
     private String username;
     private String fullName;
-    private String password;
+//    private String password;
 }
