@@ -38,7 +38,7 @@ public class MessageController {
     @MessageMapping("/chat/private")
     public void sendMessage(@Payload PrivateMessageDto message) {
         PrivateMessage savedMessage = messageService.save(message);
-        User receiver = userService.find(message.getReceiverId());
+        User receiver = userService.find(message.getReceiver().getId());
         simpMessagingTemplate.convertAndSendToUser(
             String.valueOf(receiver.getId()),
             "/queue/messages",

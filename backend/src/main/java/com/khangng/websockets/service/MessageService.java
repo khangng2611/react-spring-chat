@@ -33,13 +33,13 @@ public class MessageService {
     
     public PrivateMessage save(PrivateMessageDto message) {
         Room room = roomService.getRoom(
-                message.getSenderId(),
-                message.getReceiverId(),
+                message.getSender().getId(),
+                message.getReceiver().getId(),
                 true
         );
         if (room == null) return null;
-        User sender = userService.find(message.getSenderId());
-        User receiver = userService.find(message.getReceiverId());
+        User sender = userService.find(message.getSender().getId());
+        User receiver = userService.find(message.getReceiver().getId());
         if (sender == null || receiver == null ) return null;
         PrivateMessage newMessage = PrivateMessage.builder()
             .sender(sender)
@@ -51,7 +51,7 @@ public class MessageService {
     }
     
     public PublicMessage save(PublicMessageDto message) {
-        User sender = userService.find(message.getSenderId());
+        User sender = userService.find(message.getSender().getId());
         if (sender == null) return null;
         PublicMessage newMessage = PublicMessage.builder()
             .sender(sender)
