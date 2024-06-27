@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Sidebar from '../sidebar';
 import ChatWindow from '../chatwindow';
-import { OnlineUserSchema } from '../../constant/schema';
+import { UserSchema } from '../../constant/schema';
 import { useWebsockets } from '../../context/WebsocketsContext';
 
 const Container = () => {
-    const [selectedUser, setSelectedUser] = useState<OnlineUserSchema | null>(null);
+    const [selectedUser, setSelectedUser] = useState<UserSchema | null>(null);
     const { onDisconnected } = useWebsockets();
 
     window.onbeforeunload = () => {

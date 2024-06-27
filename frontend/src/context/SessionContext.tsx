@@ -9,18 +9,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import Loader from "../component/loader"
 import { apiClient } from "../services/api";
-import { UserDetailsSchema } from "../constant/schema";
+import { UserSchema } from "../constant/schema";
 
 interface ContextSchema {
-    details: UserDetailsSchema | null;
-    // onlineUsers: Array<OnlineUserSchema>;
+    details: UserSchema | null;
+    // onlineUsers: Array<UserSchema>;
     // wsClient: WebSocketsClient | null;
     handleUserLogin: LOGIN_FUNC;
     handleUserLogout: () => Promise<void>;
 }
 interface StateSchema {
     isLoading: boolean;
-    details: UserDetailsSchema | null;
+    details: UserSchema | null;
 }
 
 type LOGIN_FUNC = (credentials: {
@@ -44,7 +44,7 @@ const SessionContextProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoading: true,
         details: null,
     });
-    // const [onlineUsers, setOnlineUsers] = useState<Array<OnlineUserSchema>>([]);
+    // const [onlineUsers, setOnlineUsers] = useState<Array<UserSchema>>([]);
     // const [wsClient, setWsClient] = useState<WebSocketsClient | null>(null);
     // // const wsClient = useRef(WebSocketsClient.prototype);
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ const SessionContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const handleUserLogin: LOGIN_FUNC = useCallback(
         async (credentials, redirectPath = "/chat") => {
-            let userDetails: UserDetailsSchema | null = null;
+            let userDetails: UserSchema | null = null;
             try {
                 const response = await apiClient.post("/signin", credentials);
                 userDetails = response.data;
@@ -89,7 +89,7 @@ const SessionContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleIfUserAuthenticated = useCallback(
         async () => {
             setState({ isLoading: true, details: null });
-            let userDetails: UserDetailsSchema;
+            let userDetails: UserSchema;
             // const response = await apiClient.get("/refresh");
             // userDetails = response.data;
 

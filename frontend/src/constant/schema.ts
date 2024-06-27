@@ -1,11 +1,5 @@
 
-export interface UserDetailsSchema {
-    id: number,
-    username: string;
-    fullName: string;
-}
-
-export interface OnlineUserSchema {
+export interface UserSchema {
     id: number;
     username: string;
     fullName: string;

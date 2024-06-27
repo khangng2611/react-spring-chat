@@ -1,11 +1,11 @@
-import { OnlineUserSchema, MessageSchema } from "../../constant/schema";
+import { UserSchema, MessageSchema } from "../../constant/schema";
 import { useSession } from "../../context/SessionContext";
 import { useWebsockets } from "../../context/WebsocketsContext";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef, useState } from 'react'
 
-const ChatContent = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
+const ChatContent = ({ selectedUser }: { selectedUser: UserSchema }) => {
     const { details } = useSession();
     const { privateMessages, publicMessages } = useWebsockets();
     const [messages, setMessages] = useState<Array<MessageSchema>>([]);

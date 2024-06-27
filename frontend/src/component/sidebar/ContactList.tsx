@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { AVATAR_COLORS } from '../../constant/color'
-import { OnlineUserSchema } from '../../constant/schema';
+import { UserSchema } from '../../constant/schema';
 import { useWebsockets } from '../../context/WebsocketsContext';
 
-const ContactList = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUserSchema | null, setSelectedUser: (user: OnlineUserSchema) => void }) => {
+const ContactList = ({ selectedUser, setSelectedUser }: { selectedUser: UserSchema | null, setSelectedUser: (user: UserSchema) => void }) => {
   const { onlineUsers } = useWebsockets();
   const onlineUsersArray = Array.from(onlineUsers.values()).flat();
 
   useEffect(() => {
   }, [onlineUsers])
 
-  const handleOnCLick = (onlineUser: OnlineUserSchema) => {
+  const handleOnCLick = (onlineUser: UserSchema) => {
     setSelectedUser(onlineUser);
   }
 

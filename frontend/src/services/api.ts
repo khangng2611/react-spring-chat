@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MessageSchema, OnlineUserSchema } from '../constant/schema';
+import { MessageSchema, UserSchema } from '../constant/schema';
 
 export const apiClient = axios.create({
     baseURL: process.env.REACT_APP_BE_URL,
@@ -11,7 +11,7 @@ export const apiClient = axios.create({
 export const getOnlineUsers = async () => {
     try {
         const response = await apiClient.get('users');
-        return response.data as Array<OnlineUserSchema>;
+        return response.data as Array<UserSchema>;
     } catch (error: any) {
         if (error.response) {
             console.log('error.response');

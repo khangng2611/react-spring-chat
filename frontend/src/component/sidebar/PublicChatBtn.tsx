@@ -1,8 +1,8 @@
 import React from 'react';
-import { OnlineUserSchema } from "../../constant/schema";
+import { UserSchema } from "../../constant/schema";
 import { TONE_COLORS } from '../../constant/color';
 
-const PublicChatBtn = ({ selectedUser, setSelectedUser }: { selectedUser: OnlineUserSchema | null, setSelectedUser: (user: OnlineUserSchema) => void }) => {
+const PublicChatBtn = ({ selectedUser, setSelectedUser }: { selectedUser: UserSchema | null, setSelectedUser: (user: UserSchema) => void }) => {
     const handleOnCLick = () => {
         setSelectedUser({
             id: -1,

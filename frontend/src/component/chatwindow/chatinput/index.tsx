@@ -1,11 +1,11 @@
 import React from "react";
-import { OnlineUserSchema } from "../../../constant/schema";
+import { UserSchema } from "../../../constant/schema";
 import SendBtn from "./SendBtn";
 import AttachBtn from "./AttachBtn";
 import IconBtn from "./IconBtn";
 import { useWebsockets } from "../../../context/WebsocketsContext";
 
-const ChatInput = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
+const ChatInput = ({ selectedUser }: { selectedUser: UserSchema }) => {
     const { sendPrivateMessage, sendPublicMessage } = useWebsockets();
     const [inputContent, setInputContent] = React.useState('');
     const handleInputChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {

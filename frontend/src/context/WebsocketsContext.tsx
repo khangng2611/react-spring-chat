@@ -2,11 +2,11 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import Stomp, { Frame, Client } from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useSession } from "./SessionContext"
-import { MessageSchema, OnlineUserSchema, UserDetailsSchema } from '../constant/schema';
+import { MessageSchema, UserSchema } from '../constant/schema';
 import { getAllMessages, getOnlineUsers } from "../services/api";
 
 interface WebSocketContextSchema {
-    onlineUsers: Map<number, OnlineUserSchema>;
+    onlineUsers: Map<number, UserSchema>;
     onDisconnected?: () => void;
     privateMessages: Map<number, Array<MessageSchema>>;
     sendPrivateMessage: (receiverId: number, message: string) => void;
@@ -15,7 +15,7 @@ interface WebSocketContextSchema {
 }
 
 const WebSocketsContext = createContext<WebSocketContextSchema>({
-    onlineUsers: new Map<number, OnlineUserSchema>(),
+    onlineUsers: new Map<number, UserSchema>(),
     onDisconnected: () => { },
     privateMessages: new Map<number, Array<MessageSchema>>(),
     sendPrivateMessage: () => { },
@@ -38,7 +38,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
         } // eslint-disable-next-line
     }, [details])
 
-    async function connect(userDetails: UserDetailsSchema) {
+    async function connect(userDetails: UserSchema) {
         const socket = new SockJS(`${process.env.REACT_APP_BE_URL}/ws` || '');
         wsClient.current = Stomp.over(socket);
         wsClient.current.connect({}, onConnected, onError);
@@ -102,7 +102,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const onNewOnlineReceived = async (message: Stomp.Message) => {
-        const newUser: OnlineUserSchema = JSON.parse(message.body);
+        const newUser: UserSchema = JSON.parse(message.body);
         if (newUser.id === details?.id) return
         // check if a OFFLINE message is sent
         if (newUser.status === 'OFFLINE') {
@@ -157,7 +157,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
             })
         );
         const newMessage: MessageSchema = {
-            senderId: details?.id || 0,
+            senderId: details!.id,
             receiverId: receiverId,
             content: message,
             id: undefined,
