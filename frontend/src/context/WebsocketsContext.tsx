@@ -177,7 +177,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
             '/app/chat/public',
             {},
             JSON.stringify({
-                senderId: details?.id,
+                sender: details!,
                 content: message,
             })
         );

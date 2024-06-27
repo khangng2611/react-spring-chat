@@ -42,7 +42,7 @@ const Login = () => {
                         type="text"
                         value={userInfo.username}
                         placeholder='Enter your username'
-                        minLength={6}
+                        // minLength={6}
                         maxLength={100}
                         onChange={handleFormChange}
                     />
@@ -57,7 +57,7 @@ const Login = () => {
                         type="text"
                         value={userInfo.fullName}
                         placeholder='Enter your full name'
-                        minLength={6}
+                        // minLength={6}
                         maxLength={100}
                         onChange={handleFormChange}
                     />
