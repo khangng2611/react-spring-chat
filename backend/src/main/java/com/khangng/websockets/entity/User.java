@@ -28,4 +28,9 @@ public class User {
     @Column(name="status")
     private Status status;
     
+    public User(String username, String fullName, Status status) {
+        this.username = username;
+        this.fullName = fullName;
+        this.status = status;
+    }
 }

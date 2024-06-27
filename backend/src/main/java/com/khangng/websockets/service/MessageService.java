@@ -5,9 +5,11 @@ import com.khangng.websockets.dto.PublicMessageDto;
 import com.khangng.websockets.entity.PrivateMessage;
 import com.khangng.websockets.entity.PublicMessage;
 import com.khangng.websockets.entity.Room;
+import com.khangng.websockets.entity.User;
 import com.khangng.websockets.repository.PrivateMessageRepository;
 import com.khangng.websockets.repository.PublicMessageRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,13 +17,19 @@ import java.util.List;
 public class MessageService {
     private PrivateMessageRepository privateMessageRepository;
     private PublicMessageRepository publicMessageRepository;
-    
     private RoomService roomService;
+    private UserService userService;
     
-    public MessageService(PrivateMessageRepository privateMessageRepository, PublicMessageRepository publicMessageRepository, RoomService roomService) {
+    public MessageService(
+        PrivateMessageRepository privateMessageRepository,
+        PublicMessageRepository publicMessageRepository,
+        RoomService roomService,
+        UserService userService
+    ) {
         this.privateMessageRepository = privateMessageRepository;
         this.publicMessageRepository = publicMessageRepository;
         this.roomService = roomService;
+        this.userService = userService;
     }
     
     public PrivateMessage save(PrivateMessageDto message) {
@@ -43,10 +51,14 @@ public class MessageService {
     }
     
     public PublicMessage save(PublicMessageDto message) {
-        PublicMessage newMessage = PublicMessage.builder()
-                .senderId(message.getSenderId())
-                .content(message.getContent())
-                .build();
+        User sender = userService.find(message.getSenderId());
+        if (sender == null) {
+            return null;
+        }
+        PublicMessage newMessage = new PublicMessage(
+                sender,
+                message.getContent()
+        );
         return publicMessageRepository.save(newMessage);
     }
     

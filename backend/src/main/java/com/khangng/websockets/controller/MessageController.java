@@ -44,9 +44,7 @@ public class MessageController {
     @MessageMapping("/chat/public")
     @SendTo("/public")
     public PublicMessage sendMessage(@Payload PublicMessageDto message) {
-        PublicMessage savedMessage = messageService.save(message);
-        return savedMessage;
-
+        return messageService.save(message);
     }
     
     @GetMapping("/messages/{senderId}/{receiverId}")

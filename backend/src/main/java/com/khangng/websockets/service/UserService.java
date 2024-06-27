@@ -49,12 +49,19 @@ public class UserService {
             return returnedUser;
         }
         returnedUser = new User(
-                0,
                 signInDto.getUsername(),
-                signInDto.getPassword(),
+//                signInDto.getPassword(),
                 signInDto.getFullName(),
                 Status.OFFLINE
         );
         return userRepository.save(returnedUser);
+    }
+    
+    public User find(int id) {
+        Optional<User> checkUser = userRepository.findById(id);
+        if (checkUser.isPresent()) {
+            return checkUser.get();
+        }
+        return null;
     }
 }
