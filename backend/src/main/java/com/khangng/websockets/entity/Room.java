@@ -16,10 +16,12 @@ public class Room {
     @Column(name="id")
     private int id;
     
-    @Column(name="first_user_id")
-    private int firstUserId;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="first_user_id")
+    private User firstUser;
     
-    @Column(name="second_user_id")
-    private int secondUserId;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="second_user_id")
+    private User secondUser;
 
 }

@@ -4,7 +4,9 @@ import com.khangng.websockets.dto.PrivateMessageDto;
 import com.khangng.websockets.dto.PublicMessageDto;
 import com.khangng.websockets.entity.PrivateMessage;
 import com.khangng.websockets.entity.PublicMessage;
+import com.khangng.websockets.entity.User;
 import com.khangng.websockets.service.MessageService;
+import com.khangng.websockets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -22,11 +24,13 @@ import java.util.List;
 @CrossOrigin
 public class MessageController {
     private MessageService messageService;
+    private UserService userService;
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
-    public MessageController(MessageService messageService, SimpMessagingTemplate simpMessagingTemplate) {
+    public MessageController(MessageService messageService, UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
         this.messageService = messageService;
+        this.userService = userService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
     
@@ -34,8 +38,9 @@ public class MessageController {
     @MessageMapping("/chat/private")
     public void sendMessage(@Payload PrivateMessageDto message) {
         PrivateMessage savedMessage = messageService.save(message);
+        User receiver = userService.find(message.getReceiverId());
         simpMessagingTemplate.convertAndSendToUser(
-            String.valueOf(savedMessage.getReceiverId()),
+            String.valueOf(receiver.getId()),
             "/queue/messages",
             savedMessage
         );

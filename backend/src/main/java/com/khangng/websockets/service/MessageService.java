@@ -9,7 +9,6 @@ import com.khangng.websockets.entity.User;
 import com.khangng.websockets.repository.PrivateMessageRepository;
 import com.khangng.websockets.repository.PublicMessageRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,27 +37,26 @@ public class MessageService {
                 message.getReceiverId(),
                 true
         );
-        if (room != null) {
-            PrivateMessage newMessage = PrivateMessage.builder()
-                .senderId(message.getSenderId())
-                .receiverId(message.getReceiverId())
-                .content(message.getContent())
-                .roomId(room.getId())
-                .build();
-            return privateMessageRepository.save(newMessage);
-        }
-        return null;
+        if (room == null) return null;
+        User sender = userService.find(message.getSenderId());
+        User receiver = userService.find(message.getReceiverId());
+        if (sender == null || receiver == null ) return null;
+        PrivateMessage newMessage = PrivateMessage.builder()
+            .sender(sender)
+            .receiver(receiver)
+            .content(message.getContent())
+            .roomId(room.getId())
+            .build();
+        return privateMessageRepository.save(newMessage);
     }
     
     public PublicMessage save(PublicMessageDto message) {
         User sender = userService.find(message.getSenderId());
-        if (sender == null) {
-            return null;
-        }
-        PublicMessage newMessage = new PublicMessage(
-                sender,
-                message.getContent()
-        );
+        if (sender == null) return null;
+        PublicMessage newMessage = PublicMessage.builder()
+            .sender(sender)
+            .content(message.getContent())
+            .build();
         return publicMessageRepository.save(newMessage);
     }
     

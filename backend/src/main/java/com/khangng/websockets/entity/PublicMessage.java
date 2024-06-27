@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "public_message")
 public class PublicMessage {
@@ -16,7 +18,7 @@ public class PublicMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
-    @ManyToOne()
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="sender_id")
     private User sender;
     
@@ -26,9 +28,4 @@ public class PublicMessage {
     @Column(name="created_at")
     @CreationTimestamp
     private String createdAt;
-    
-    public PublicMessage(User sender, String content) {
-        this.sender = sender;
-        this.content = content;
-    }
 }

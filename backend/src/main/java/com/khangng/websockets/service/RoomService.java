@@ -1,6 +1,7 @@
 package com.khangng.websockets.service;
 
 import com.khangng.websockets.entity.Room;
+import com.khangng.websockets.entity.User;
 import com.khangng.websockets.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,30 +10,30 @@ import java.util.Optional;
 @Service
 public class RoomService {
     private RoomRepository roomRepository;
+    private UserService userService;
     
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, UserService userService) {
         this.roomRepository = roomRepository;
+        this.userService = userService;
     }
     
     public Room getRoom (int userId1, int userId2, boolean createIfNotExist) {
         int firstUserId = Math.min(userId1, userId2);
         int secondUserId = Math.max(userId1, userId2);
-        Optional<Room> checkRoom = roomRepository.findByFirstUserIdAndSecondUserId(firstUserId, secondUserId);
-        if (checkRoom.isPresent()) {
+        User firstUser = userService.find(firstUserId);
+        User secondUser = userService.find(secondUserId);
+        Optional<Room> checkRoom = roomRepository.findByFirstUserAndSecondUser(firstUser, secondUser);
+        if (checkRoom.isPresent())
             return checkRoom.get();
-        } else {
-            if (createIfNotExist) {
-                Room newRoom = createRoom(firstUserId, secondUserId);
-                return newRoom;
-            }
-            return null;
-        }
+        if (createIfNotExist)
+            return createRoom(firstUser, secondUser);
+        return null;
     }
     
-    private Room createRoom (int firstUserId, int secondUserId) {
+    private Room createRoom (User firstUser, User secondUser) {
         Room newRoom = new Room();
-        newRoom.setFirstUserId(firstUserId);
-        newRoom.setSecondUserId(secondUserId);
+        newRoom.setFirstUser(firstUser);
+        newRoom.setSecondUser(secondUser);
         return roomRepository.save(newRoom);
     }
 }

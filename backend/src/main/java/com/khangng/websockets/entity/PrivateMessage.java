@@ -21,11 +21,13 @@ public class PrivateMessage {
     @Column(name="room_id")
     private int roomId;
     
-    @Column(name="sender_id")
-    private int senderId;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="sender_id")
+    private User sender;
     
-    @Column(name="receiver_id")
-    private int receiverId;
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="receiver_id")
+    private User receiver;
     
     @Column(name="content", length = 1000)
     private String content;
