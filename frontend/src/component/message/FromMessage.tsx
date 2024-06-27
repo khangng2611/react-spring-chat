@@ -5,9 +5,12 @@ import { MessageSchema } from "../../constant/schema";
 
 const FromMessage = ({ message }: { message: MessageSchema }) => {
     const { details } = useSession();
+    const [showTimestamp, setShowTimestamp] = React.useState(false);
+    const formattedTime = message.createdAt?.slice(0, message.createdAt?.lastIndexOf("."));
+
     return (
-        <div className="col-start-6 col-end-13 px-3 rounded-lg">
-            <div className="flex items-center justify-start flex-row-reverse">
+        <div className="col-start-3 col-end-13 px-3 rounded-lg" onMouseEnter={() => setShowTimestamp(true)} onMouseLeave={() => setShowTimestamp(false)}>
+            <div className="flex items-end justify-start flex-row-reverse">
                 <div
                     className={`flex items-center justify-center h-10 w-10 rounded-full flex-shrink-0 ${AVATAR_COLORS[details!.id % AVATAR_COLORS.length]}`}
                 >
@@ -18,6 +21,7 @@ const FromMessage = ({ message }: { message: MessageSchema }) => {
                         {message.content}
                     </p>
                 </div>
+                <p className="mr-2 text-xs text-gray-400 italic">{showTimestamp ? formattedTime : formattedTime?.split(" ")[1].slice(0, 5)}</p>
             </div>
         </div>
     )

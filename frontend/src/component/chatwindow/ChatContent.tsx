@@ -30,7 +30,7 @@ const ChatContent = ({ selectedUser }: { selectedUser: UserSchema }) => {
                             return (
                                 message.sender.id === details?.id ?
                                     <FromMessage key={index} message={message} /> :
-                                    <ToMessage key={index} message={message} />
+                                    <ToMessage key={index} isPublic={selectedUser.id === -1} message={message} />
                             )
                         }) : null
                     }
