@@ -1,8 +1,9 @@
 import React from "react";
 import { useSession } from "../../context/SessionContext";
 import { AVATAR_COLORS } from "../../constant/color";
+import { MessageSchema } from "../../constant/schema";
 
-const FromMessage = ({ content }: { content: string }) => {
+const FromMessage = ({ message }: { message: MessageSchema }) => {
     const { details } = useSession();
     return (
         <div className="col-start-6 col-end-13 px-3 rounded-lg">
@@ -14,7 +15,7 @@ const FromMessage = ({ content }: { content: string }) => {
                 </div>
                 <div className="relative mr-3 text-sm bg-blue-100 py-2 px-4 shadow rounded-xl min-w-fit max-w-max" >
                     <p className="break-words" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                        {content}
+                        {message.content}
                     </p>
                 </div>
             </div>

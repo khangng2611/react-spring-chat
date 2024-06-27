@@ -6,7 +6,7 @@ import { MessageSchema, OnlineUserSchema, UserDetailsSchema } from '../constant/
 import { getAllMessages, getOnlineUsers } from "../services/api";
 
 interface WebSocketContextSchema {
-    onlineUsers: Map<number, Array<OnlineUserSchema>>;
+    onlineUsers: Map<number, OnlineUserSchema>;
     onDisconnected?: () => void;
     privateMessages: Map<number, Array<MessageSchema>>;
     sendPrivateMessage: (receiverId: number, message: string) => void;
@@ -15,7 +15,7 @@ interface WebSocketContextSchema {
 }
 
 const WebSocketsContext = createContext<WebSocketContextSchema>({
-    onlineUsers: new Map<number, Array<OnlineUserSchema>>(),
+    onlineUsers: new Map<number, OnlineUserSchema>(),
     onDisconnected: () => { },
     privateMessages: new Map<number, Array<MessageSchema>>(),
     sendPrivateMessage: () => { },
@@ -142,7 +142,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
         const newMessage: MessageSchema = JSON.parse(message.body);
         const sender = onlineUsers.get(newMessage.senderId);
         if (!sender) return;
-        setPublicMessages([...publicMessages, newMessage]);
+        setPublicMessages((prev: Array<MessageSchema>) => [...prev, newMessage]);
     };
 
     const sendPrivateMessage = async (receiverId: number, message: string) => {
@@ -189,7 +189,7 @@ const WebsocketsContextProvider: React.FC<{ children: React.ReactNode }> = ({
             roomId: undefined,
             createdAt: undefined,
         }
-        setPublicMessages([...publicMessages, newMessage]);
+        setPublicMessages((prev: Array<MessageSchema>) => [...prev, newMessage]);
     }
 
     return (

@@ -1,21 +1,25 @@
 import { OnlineUserSchema, MessageSchema } from "../../constant/schema";
+import { useSession } from "../../context/SessionContext";
 import { useWebsockets } from "../../context/WebsocketsContext";
 import FromMessage from "../message/FromMessage";
 import ToMessage from "../message/ToMessage";
 import React, { useEffect, useRef, useState } from 'react'
 
 const ChatContent = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
-    const { privateMessages } = useWebsockets();
+    const { details } = useSession();
+    const { privateMessages, publicMessages } = useWebsockets();
     const [messages, setMessages] = useState<Array<MessageSchema>>([]);
-    
+
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
     useEffect(() => {
-        setMessages(privateMessages.get(selectedUser.id) || []);
+        if (selectedUser.id === -1)
+            setMessages(publicMessages);
+        else setMessages(privateMessages.get(selectedUser.id) || []);
         scrollToBottom();
-    }, [selectedUser, privateMessages])
+    }, [selectedUser, privateMessages, publicMessages])
 
     return (
         <div className="flex flex-col h-full overflow-x-auto mb-4">
@@ -24,9 +28,9 @@ const ChatContent = ({ selectedUser }: { selectedUser: OnlineUserSchema }) => {
                     {
                         messages.length ? messages.map((message: MessageSchema, index: number) => {
                             return (
-                                message.receiverId === selectedUser.id ?
-                                    <FromMessage key={index} content={message.content} /> :
-                                    <ToMessage key={index} receiver={selectedUser} content={message.content} />
+                                message.senderId === details?.id ?
+                                    <FromMessage key={index} message={message} /> :
+                                    <ToMessage key={index} message={message} />
                             )
                         }) : null
                     }

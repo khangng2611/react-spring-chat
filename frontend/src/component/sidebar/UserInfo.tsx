@@ -5,6 +5,7 @@ const UserInfo = () => {
     const { details } = useSession();
     return (
         <div className="flex flex-col items-center bg-blue-300 py-4 my-6 rounded-lg" >
+            <img src={process.env.PUBLIC_URL + '/avatar.png'} alt="Avatar" className="w-16 h-16 rounded-full" />
             <div className="text-base font-semibold mt-2">{details?.fullName}</div>
             <div className="text-sm text-gray-500">{details?.username}</div>
             <div className="flex flex-row items-center mt-3">
