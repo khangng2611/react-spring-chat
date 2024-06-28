@@ -1,15 +1,9 @@
 version: '3'
 services:
-  chatter-box:
-    container_name: chatter-box
+  chatter-box-ui:
+    container_name: chatter-box-ui
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    networks:
-      - chatter-box
-
-networks:
-  chatter-box:
-    external: true
