@@ -13,9 +13,9 @@ Public Conversation
 
 # Project Requirements
 
-* [JDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)  17
+* [JDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) 17
 * [Spring Boot](https://www.oracle.com/technologies/) 3.x.x
-* [Postgres](https://www.mysql.com/)
+* [PostgreSQL](https://www.postgresql.org/)
 * [NodeJS](https://nodejs.org/en/download/) v20.12.2
 * [ReactJS](https://reactjs.org/) v18
 * [TailwindCSS](https://tailwindcss.com/) v3.4.3
