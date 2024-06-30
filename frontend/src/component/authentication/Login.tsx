@@ -43,6 +43,7 @@ const Login = () => {
                         value={userInfo.username}
                         placeholder='Enter your username'
                         minLength={6}
+                        required
                         maxLength={100}
                         onChange={handleFormChange}
                     />
@@ -58,6 +59,7 @@ const Login = () => {
                         value={userInfo.fullName}
                         placeholder='Enter your full name'
                         minLength={6}
+                        required
                         maxLength={100}
                         onChange={handleFormChange}
                     />
