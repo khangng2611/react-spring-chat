@@ -5,9 +5,9 @@ Real-time chat application built with React and Spring Boot. Talk with online fr
 # Project overview
 ## Features
 - Chatting using Spring WebSocket, using Stomp protocol over SockJS
-- Online & Offline User Detection
-- Stomp Topic & Queue Subscription
 - Allowing public channels and private channels
+- Stomp Topic & Queue Subscription
+- Online & Offline User Detection
 - Closing Browser Detection
 ## Demo
 One-on-One Conversation
@@ -28,7 +28,7 @@ Public Conversation
 
 # Project development set up
 ## Using docker-compose
-- Set up your database configuration (database name, username, password). For example:
+- Create your `.env` file, then set up your database configuration (database name, username, password). For example:
     ```
     POSTGRES_DB=chat
     POSTGRES_USER=postgres
