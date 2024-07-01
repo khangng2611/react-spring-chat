@@ -3,7 +3,13 @@
 Real-time chat application built with React and Spring Boot. Talk with online friends, either in private or public ways.
 
 # Project overview
-
+## Features
+- Chatting using Spring WebSocket, using Stomp protocol over SockJS
+- Online & Offline User Detection
+- Stomp Topic & Queue Subscription
+- Allowing public channels and private channels
+- Closing Browser Detection
+## Demo
 One-on-One Conversation
 ![One-on-one Conversation](assets/private-chat.gif?raw=true)
 
