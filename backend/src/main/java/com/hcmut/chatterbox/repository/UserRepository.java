@@ -1,7 +1,7 @@
-package com.khangng.websockets.repository;
+package com.hcmut.chatterbox.repository;
 
-import com.khangng.websockets.config.Status;
-import com.khangng.websockets.entity.User;
+import com.hcmut.chatterbox.config.Status;
+import com.hcmut.chatterbox.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

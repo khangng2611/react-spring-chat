@@ -1,7 +1,7 @@
-package com.khangng.websockets.repository;
+package com.hcmut.chatterbox.repository;
 
-import com.khangng.websockets.entity.Room;
-import com.khangng.websockets.entity.User;
+import com.hcmut.chatterbox.entity.Room;
+import com.hcmut.chatterbox.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

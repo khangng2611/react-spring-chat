@@ -1,13 +1,13 @@
-package com.khangng.websockets.service;
+package com.hcmut.chatterbox.service;
 
-import com.khangng.websockets.dto.PrivateMessageDto;
-import com.khangng.websockets.dto.PublicMessageDto;
-import com.khangng.websockets.entity.PrivateMessage;
-import com.khangng.websockets.entity.PublicMessage;
-import com.khangng.websockets.entity.Room;
-import com.khangng.websockets.entity.User;
-import com.khangng.websockets.repository.PrivateMessageRepository;
-import com.khangng.websockets.repository.PublicMessageRepository;
+import com.hcmut.chatterbox.dto.PrivateMessageDto;
+import com.hcmut.chatterbox.dto.PublicMessageDto;
+import com.hcmut.chatterbox.entity.PrivateMessage;
+import com.hcmut.chatterbox.entity.PublicMessage;
+import com.hcmut.chatterbox.entity.Room;
+import com.hcmut.chatterbox.entity.User;
+import com.hcmut.chatterbox.repository.PrivateMessageRepository;
+import com.hcmut.chatterbox.repository.PublicMessageRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

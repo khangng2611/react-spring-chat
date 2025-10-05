@@ -1,18 +1,16 @@
-package com.khangng.websockets.controller;
+package com.hcmut.chatterbox.controller;
 
 
-import com.khangng.websockets.dto.SignInDto;
-import com.khangng.websockets.entity.User;
-import com.khangng.websockets.service.UserService;
+import com.hcmut.chatterbox.dto.SignInDto;
+import com.hcmut.chatterbox.entity.User;
+import com.hcmut.chatterbox.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@Controller
 @RestController
 @CrossOrigin
 public class UserController {

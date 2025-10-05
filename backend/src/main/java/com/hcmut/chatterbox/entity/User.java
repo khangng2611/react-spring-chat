@@ -1,8 +1,7 @@
-package com.khangng.websockets.entity;
+package com.hcmut.chatterbox.entity;
 
-import com.khangng.websockets.config.Status;
+import com.hcmut.chatterbox.config.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

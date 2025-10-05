@@ -1,8 +1,8 @@
-package com.khangng.websockets.service;
+package com.hcmut.chatterbox.service;
 
-import com.khangng.websockets.entity.Room;
-import com.khangng.websockets.entity.User;
-import com.khangng.websockets.repository.RoomRepository;
+import com.hcmut.chatterbox.entity.Room;
+import com.hcmut.chatterbox.entity.User;
+import com.hcmut.chatterbox.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

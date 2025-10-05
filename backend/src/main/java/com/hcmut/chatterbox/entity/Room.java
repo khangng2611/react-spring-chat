@@ -1,4 +1,4 @@
-package com.khangng.websockets.entity;
+package com.hcmut.chatterbox.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

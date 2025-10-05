@@ -1,10 +1,10 @@
-package com.khangng.websockets;
+package com.hcmut.chatterbox;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WebsocketsApplicationTests {
+class ChatterBoxApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,9 +1,9 @@
-package com.khangng.websockets.service;
+package com.hcmut.chatterbox.service;
 
-import com.khangng.websockets.config.Status;
-import com.khangng.websockets.dto.SignInDto;
-import com.khangng.websockets.entity.User;
-import com.khangng.websockets.repository.UserRepository;
+import com.hcmut.chatterbox.config.Status;
+import com.hcmut.chatterbox.dto.SignInDto;
+import com.hcmut.chatterbox.entity.User;
+import com.hcmut.chatterbox.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

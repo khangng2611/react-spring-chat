@@ -1,12 +1,12 @@
-package com.khangng.websockets.controller;
+package com.hcmut.chatterbox.controller;
 
-import com.khangng.websockets.dto.PrivateMessageDto;
-import com.khangng.websockets.dto.PublicMessageDto;
-import com.khangng.websockets.entity.PrivateMessage;
-import com.khangng.websockets.entity.PublicMessage;
-import com.khangng.websockets.entity.User;
-import com.khangng.websockets.service.MessageService;
-import com.khangng.websockets.service.UserService;
+import com.hcmut.chatterbox.dto.PrivateMessageDto;
+import com.hcmut.chatterbox.dto.PublicMessageDto;
+import com.hcmut.chatterbox.entity.PrivateMessage;
+import com.hcmut.chatterbox.entity.PublicMessage;
+import com.hcmut.chatterbox.entity.User;
+import com.hcmut.chatterbox.service.MessageService;
+import com.hcmut.chatterbox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-//@Controller
 @RestController
 @CrossOrigin
 public class MessageController {

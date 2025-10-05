@@ -1,4 +1,4 @@
-package com.khangng.websockets.dto;
+package com.hcmut.chatterbox.dto;
 
 import lombok.Data;
 

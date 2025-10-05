@@ -1,4 +1,4 @@
-package com.khangng.websockets.config;
+package com.hcmut.chatterbox.config;
 
 public enum Status {
     OFFLINE, ONLINE

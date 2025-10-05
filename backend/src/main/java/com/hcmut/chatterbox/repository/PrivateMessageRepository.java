@@ -1,6 +1,6 @@
-package com.khangng.websockets.repository;
+package com.hcmut.chatterbox.repository;
 
-import com.khangng.websockets.entity.PrivateMessage;
+import com.hcmut.chatterbox.entity.PrivateMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

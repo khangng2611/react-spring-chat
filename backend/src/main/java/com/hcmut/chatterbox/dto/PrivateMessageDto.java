@@ -1,7 +1,6 @@
-package com.khangng.websockets.dto;
+package com.hcmut.chatterbox.dto;
 
-import com.khangng.websockets.entity.User;
-import jakarta.persistence.Column;
+import com.hcmut.chatterbox.entity.User;
 import lombok.Data;
 
 @Data

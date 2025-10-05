@@ -1,4 +1,4 @@
-package com.khangng.websockets.config;
+package com.hcmut.chatterbox.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
