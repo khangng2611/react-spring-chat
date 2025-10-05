@@ -1,13 +1,16 @@
 package com.hcmut.chatterbox.entity;
 
-import com.hcmut.chatterbox.config.Status;
+import com.hcmut.chatterbox.enums.RegisterStatus;
+import com.hcmut.chatterbox.enums.UserStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -18,18 +21,23 @@ public class User {
     @Column(name="username")
     private String username;
     
-//    @Column(name="password")
-//    private String password;
+    @Column(name="email", unique = true)
+    private String email;
+    
+    @Column(name="phone", unique = true)
+    private String phone;
+    
+    @Column(name="hash_password")
+    private String hashPassword;
     
     @Column(name="full_name")
     private String fullName;
     
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
-    private Status status;
+    private UserStatus status;
     
-    public User(String username, String fullName, Status status) {
-        this.username = username;
-        this.fullName = fullName;
-        this.status = status;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name="register_status")
+    private RegisterStatus registerStatus = RegisterStatus.PENDING;
 }

@@ -1,7 +1,7 @@
 package com.hcmut.chatterbox.controller;
 
 
-import com.hcmut.chatterbox.dto.SignInDto;
+import com.hcmut.chatterbox.dto.request.SignInDTO;
 import com.hcmut.chatterbox.entity.User;
 import com.hcmut.chatterbox.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -38,7 +38,7 @@ public class UserController {
     }
     
     @PostMapping("/signin")
-    public User signIn (@RequestBody SignInDto signInInfo ) {
+    public User signIn (@RequestBody SignInDTO signInInfo ) {
         return userService.loadUser(signInInfo);
     }
     

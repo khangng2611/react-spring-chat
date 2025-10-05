@@ -1,7 +1,7 @@
 package com.hcmut.chatterbox.service;
 
-import com.hcmut.chatterbox.config.Status;
-import com.hcmut.chatterbox.dto.SignInDto;
+import com.hcmut.chatterbox.enums.UserStatus;
+import com.hcmut.chatterbox.dto.request.SignInDTO;
 import com.hcmut.chatterbox.entity.User;
 import com.hcmut.chatterbox.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class UserService {
         Optional<User> checkUser = userRepository.findById(user.getId());
         if (checkUser.isPresent()) {
             User storedUser = checkUser.get();
-            storedUser.setStatus(Status.ONLINE);
+            storedUser.setStatus(UserStatus.ONLINE);
             return userRepository.save(storedUser);
         }
         return null;
@@ -31,17 +31,17 @@ public class UserService {
         Optional<User> checkUser = userRepository.findById(user.getId());
         if (checkUser.isPresent()) {
             User storedUser = checkUser.get();
-            storedUser.setStatus(Status.OFFLINE);
+            storedUser.setStatus(UserStatus.OFFLINE);
             return userRepository.save(storedUser);
         }
         return null;
     }
     
     public List<User> getConnectedUsers() {
-        return userRepository.findByStatus(Status.ONLINE);
+        return userRepository.findByStatus(UserStatus.ONLINE);
     }
     
-    public User loadUser(SignInDto signInDto) {
+    public User loadUser(SignInDTO signInDto) {
         User returnedUser = null;
         Optional<User> checkUser = userRepository.findByUsername(signInDto.getUsername());
         if (checkUser.isPresent()) {
@@ -52,7 +52,7 @@ public class UserService {
                 signInDto.getUsername(),
 //                signInDto.getPassword(),
                 signInDto.getFullName(),
-                Status.OFFLINE
+                UserStatus.OFFLINE
         );
         return userRepository.save(returnedUser);
     }

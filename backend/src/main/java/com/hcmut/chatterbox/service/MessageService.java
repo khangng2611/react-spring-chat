@@ -1,7 +1,7 @@
 package com.hcmut.chatterbox.service;
 
-import com.hcmut.chatterbox.dto.PrivateMessageDto;
-import com.hcmut.chatterbox.dto.PublicMessageDto;
+import com.hcmut.chatterbox.dto.request.PrivateMessageDTO;
+import com.hcmut.chatterbox.dto.request.PublicMessageDTO;
 import com.hcmut.chatterbox.entity.PrivateMessage;
 import com.hcmut.chatterbox.entity.PublicMessage;
 import com.hcmut.chatterbox.entity.Room;
@@ -31,7 +31,7 @@ public class MessageService {
         this.userService = userService;
     }
     
-    public PrivateMessage save(PrivateMessageDto message) {
+    public PrivateMessage save(PrivateMessageDTO message) {
         Room room = roomService.getRoom(
                 message.getSender().getId(),
                 message.getReceiver().getId(),
@@ -50,7 +50,7 @@ public class MessageService {
         return privateMessageRepository.save(newMessage);
     }
     
-    public PublicMessage save(PublicMessageDto message) {
+    public PublicMessage save(PublicMessageDTO message) {
         User sender = userService.find(message.getSender().getId());
         if (sender == null) return null;
         PublicMessage newMessage = PublicMessage.builder()

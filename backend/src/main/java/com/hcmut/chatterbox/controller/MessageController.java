@@ -1,7 +1,7 @@
 package com.hcmut.chatterbox.controller;
 
-import com.hcmut.chatterbox.dto.PrivateMessageDto;
-import com.hcmut.chatterbox.dto.PublicMessageDto;
+import com.hcmut.chatterbox.dto.request.PrivateMessageDTO;
+import com.hcmut.chatterbox.dto.request.PublicMessageDTO;
 import com.hcmut.chatterbox.entity.PrivateMessage;
 import com.hcmut.chatterbox.entity.PublicMessage;
 import com.hcmut.chatterbox.entity.User;
@@ -35,7 +35,7 @@ public class MessageController {
     
     
     @MessageMapping("/chat/private")
-    public void sendMessage(@Payload PrivateMessageDto message) {
+    public void sendMessage(@Payload PrivateMessageDTO message) {
         PrivateMessage savedMessage = messageService.save(message);
         User receiver = userService.find(message.getReceiver().getId());
         simpMessagingTemplate.convertAndSendToUser(
@@ -47,11 +47,11 @@ public class MessageController {
     
     @MessageMapping("/chat/public")
     @SendTo("/public")
-    public PublicMessage sendMessage(@Payload PublicMessageDto message) {
+    public PublicMessage sendMessage(@Payload PublicMessageDTO message) {
         return messageService.save(message);
     }
     
-    @GetMapping("/messages/{senderId}/{receiverId}")
+    @GetMapping("/api/messages/{senderId}/{receiverId}")
     public List<PrivateMessage> getMessages(@PathVariable int senderId, @PathVariable int receiverId) {
         return messageService.getMessages(senderId, receiverId);
     }
