@@ -5,8 +5,8 @@ import com.hcmut.chatterbox.dto.request.PublicMessageDTO;
 import com.hcmut.chatterbox.entity.PrivateMessage;
 import com.hcmut.chatterbox.entity.PublicMessage;
 import com.hcmut.chatterbox.entity.User;
-import com.hcmut.chatterbox.service.MessageService;
-import com.hcmut.chatterbox.service.UserService;
+import com.hcmut.chatterbox.service.impl.MessageService;
+import com.hcmut.chatterbox.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -23,33 +23,33 @@ import java.util.List;
 @CrossOrigin
 public class MessageController {
     private MessageService messageService;
-    private UserService userService;
+    private UserServiceImpl userService;
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
-    public MessageController(MessageService messageService, UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
+    public MessageController(MessageService messageService, UserServiceImpl userService, SimpMessagingTemplate simpMessagingTemplate) {
         this.messageService = messageService;
         this.userService = userService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
     
     
-    @MessageMapping("/chat/private")
-    public void sendMessage(@Payload PrivateMessageDTO message) {
-        PrivateMessage savedMessage = messageService.save(message);
-        User receiver = userService.find(message.getReceiver().getId());
-        simpMessagingTemplate.convertAndSendToUser(
-            String.valueOf(receiver.getId()),
-            "/queue/messages",
-            savedMessage
-        );
-    }
+//    @MessageMapping("/chat/private")
+//    public void sendMessage(@Payload PrivateMessageDTO message) {
+//        PrivateMessage savedMessage = messageService.save(message);
+//        User receiver = userService.find(message.getReceiver().getId());
+//        simpMessagingTemplate.convertAndSendToUser(
+//            String.valueOf(receiver.getId()),
+//            "/queue/messages",
+//            savedMessage
+//        );
+//    }
     
-    @MessageMapping("/chat/public")
-    @SendTo("/public")
-    public PublicMessage sendMessage(@Payload PublicMessageDTO message) {
-        return messageService.save(message);
-    }
+//    @MessageMapping("/chat/public")
+//    @SendTo("/public")
+//    public PublicMessage sendMessage(@Payload PublicMessageDTO message) {
+//        return messageService.save(message);
+//    }
     
     @GetMapping("/api/messages/{senderId}/{receiverId}")
     public List<PrivateMessage> getMessages(@PathVariable int senderId, @PathVariable int receiverId) {

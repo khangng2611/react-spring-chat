@@ -18,9 +18,6 @@ public class User {
     @Column(name="id")
     private int id;
     
-    @Column(name="username")
-    private String username;
-    
     @Column(name="email", unique = true)
     private String email;
     
@@ -33,9 +30,9 @@ public class User {
     @Column(name="full_name")
     private String fullName;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name="status")
-    private UserStatus status;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name="status")
+//    private UserStatus status = UserStatus.OFFLINE;
     
     @Enumerated(EnumType.STRING)
     @Column(name="register_status")

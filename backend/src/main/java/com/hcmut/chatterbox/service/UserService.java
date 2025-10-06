@@ -1,67 +1,9 @@
 package com.hcmut.chatterbox.service;
 
-import com.hcmut.chatterbox.enums.UserStatus;
-import com.hcmut.chatterbox.dto.request.SignInDTO;
-import com.hcmut.chatterbox.entity.User;
-import com.hcmut.chatterbox.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.hcmut.chatterbox.dto.request.UserRegisterRequestDTO;
+import com.hcmut.chatterbox.dto.response.ApiResponse;
+import com.hcmut.chatterbox.dto.response.UserRegisterResponseDTO;
 
-import java.util.List;
-import java.util.Optional;
-
-@Service
-public class UserService {
-    private UserRepository userRepository;
-    
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    
-    public User connect(User user) {
-        Optional<User> checkUser = userRepository.findById(user.getId());
-        if (checkUser.isPresent()) {
-            User storedUser = checkUser.get();
-            storedUser.setStatus(UserStatus.ONLINE);
-            return userRepository.save(storedUser);
-        }
-        return null;
-    }
-    
-    public User disconnect(User user) {
-        Optional<User> checkUser = userRepository.findById(user.getId());
-        if (checkUser.isPresent()) {
-            User storedUser = checkUser.get();
-            storedUser.setStatus(UserStatus.OFFLINE);
-            return userRepository.save(storedUser);
-        }
-        return null;
-    }
-    
-    public List<User> getConnectedUsers() {
-        return userRepository.findByStatus(UserStatus.ONLINE);
-    }
-    
-    public User loadUser(SignInDTO signInDto) {
-        User returnedUser = null;
-        Optional<User> checkUser = userRepository.findByUsername(signInDto.getUsername());
-        if (checkUser.isPresent()) {
-            returnedUser = checkUser.get();
-            return returnedUser;
-        }
-        returnedUser = new User(
-                signInDto.getUsername(),
-//                signInDto.getPassword(),
-                signInDto.getFullName(),
-                UserStatus.OFFLINE
-        );
-        return userRepository.save(returnedUser);
-    }
-    
-    public User find(int id) {
-        Optional<User> checkUser = userRepository.findById(id);
-        if (checkUser.isPresent()) {
-            return checkUser.get();
-        }
-        return null;
-    }
+public interface UserService {
+    ApiResponse<UserRegisterResponseDTO> registerUser(UserRegisterRequestDTO registerRequestDTO);
 }

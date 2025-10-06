@@ -1,4 +1,4 @@
-package com.hcmut.chatterbox.service;
+package com.hcmut.chatterbox.service.impl;
 
 import com.hcmut.chatterbox.dto.request.PrivateMessageDTO;
 import com.hcmut.chatterbox.dto.request.PublicMessageDTO;
@@ -17,13 +17,13 @@ public class MessageService {
     private PrivateMessageRepository privateMessageRepository;
     private PublicMessageRepository publicMessageRepository;
     private RoomService roomService;
-    private UserService userService;
+    private UserServiceImpl userService;
     
     public MessageService(
         PrivateMessageRepository privateMessageRepository,
         PublicMessageRepository publicMessageRepository,
         RoomService roomService,
-        UserService userService
+        UserServiceImpl userService
     ) {
         this.privateMessageRepository = privateMessageRepository;
         this.publicMessageRepository = publicMessageRepository;

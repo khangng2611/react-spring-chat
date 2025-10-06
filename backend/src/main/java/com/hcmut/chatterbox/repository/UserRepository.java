@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer>{
-    List<User> findByStatus(UserStatus status);
+//    List<User> findByStatus(UserStatus status);
     
-    Optional<User> findByUsername(String username);
+//    Optional<User> findByUsername(String username);
 }

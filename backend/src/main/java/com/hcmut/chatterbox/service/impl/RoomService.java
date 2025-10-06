@@ -1,4 +1,4 @@
-package com.hcmut.chatterbox.service;
+package com.hcmut.chatterbox.service.impl;
 
 import com.hcmut.chatterbox.entity.Room;
 import com.hcmut.chatterbox.entity.User;
@@ -10,9 +10,9 @@ import java.util.Optional;
 @Service
 public class RoomService {
     private RoomRepository roomRepository;
-    private UserService userService;
+    private UserServiceImpl userService;
     
-    public RoomService(RoomRepository roomRepository, UserService userService) {
+    public RoomService(RoomRepository roomRepository, UserServiceImpl userService) {
         this.roomRepository = roomRepository;
         this.userService = userService;
     }

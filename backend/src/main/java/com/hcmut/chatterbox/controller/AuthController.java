@@ -1,5 +1,8 @@
 package com.hcmut.chatterbox.controller;
 
+import com.hcmut.chatterbox.dto.request.UserRegisterRequestDTO;
+import com.hcmut.chatterbox.dto.response.ApiResponse;
+import com.hcmut.chatterbox.dto.response.UserRegisterResponseDTO;
 import com.hcmut.chatterbox.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,10 +17,9 @@ public class AuthController {
     private UserService userService;
     
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequestDTO request) {
-//        userService.register(request);
-        // convert to DTO response -> build api response -> return
-        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful. Please verify your email/phone.");
+    public ResponseEntity<ApiResponse<UserRegisterResponseDTO>> registerUser(@RequestBody UserRegisterRequestDTO request) {
+        ApiResponse<UserRegisterResponseDTO> response = userService.registerUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
 //    @PostMapping("/verify")
