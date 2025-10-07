@@ -18,10 +18,19 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     
     public ApiResponse<UserRegisterResponseDTO> registerUser(UserRegisterRequestDTO registerRequestDTO) {
-        User user = UserConverter.toEntity(registerRequestDTO);
-        User createdUser = userRepository.save(user);
-        UserRegisterResponseDTO responseDTO = UserConverter.toUserRegisterResponseDTO(createdUser);
+        UserRegisterResponseDTO responseDTO = null;
+        try {
+            User user = UserConverter.toEntity(registerRequestDTO);
+            User createdUser = userRepository.save(user);
+            responseDTO = UserConverter.toUserRegisterResponseDTO(createdUser);
+        } catch (Exception e) {
+            Optional<User> existingUser = userRepository.findByEmail(registerRequestDTO.getEmail());
+            if (existingUser.isPresent()) {
+                return ApiResponse.badRequest("User with this email already exists");
+            }
+        }
         return ApiResponse.created(responseDTO);
+        
     }
     
     public User connect(User user) {

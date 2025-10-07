@@ -3,25 +3,40 @@ package com.hcmut.chatterbox.exception;
 import com.hcmut.chatterbox.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(BizNotFoundException.class)
-    public ResponseEntity<?> handleNotFoundException(BizNotFoundException ex) {
+    public ResponseEntity<ApiResponse<?>> handleNotFoundException(BizNotFoundException ex) {
         ApiResponse<?> notFoundResponse = ApiResponse.notFound(ex.getMessage());
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
     }
     
     @ExceptionHandler(BizBadRequestException.class)
-    public ResponseEntity<?> handleBadRequestException(BizBadRequestException ex) {
+    public ResponseEntity<ApiResponse<?>> handleBadRequestException(BizBadRequestException ex) {
         ApiResponse<?> badRequestResponse = ApiResponse.badRequest(ex.getMessage());
         return new ResponseEntity<>(badRequestResponse, HttpStatus.BAD_REQUEST);
     }
     
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<String> errors = new LinkedList<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String errorMessage = error.getDefaultMessage();
+            errors.add(errorMessage);
+        });
+        ApiResponse<?> badRequestResponse = ApiResponse.badRequest(errors);
+        return new ResponseEntity<>(badRequestResponse, HttpStatus.BAD_REQUEST);
+    }
+    
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception ex) {
+    public ResponseEntity<ApiResponse<?>> handleGlobalException(Exception ex) {
         ApiResponse<?> response = ApiResponse.internalServerError(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

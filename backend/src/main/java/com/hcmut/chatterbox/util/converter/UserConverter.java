@@ -9,7 +9,7 @@ public class UserConverter {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
-        user.setHashPassword(userDTO.getHashPassword());
+        user.setHashPassword(userDTO.getHashedPassword());
         user.setFullName(userDTO.getFullName());
         return user;
     }

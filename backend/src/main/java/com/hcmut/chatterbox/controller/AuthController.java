@@ -4,6 +4,7 @@ import com.hcmut.chatterbox.dto.request.UserRegisterRequestDTO;
 import com.hcmut.chatterbox.dto.response.ApiResponse;
 import com.hcmut.chatterbox.dto.response.UserRegisterResponseDTO;
 import com.hcmut.chatterbox.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AuthController {
     private UserService userService;
     
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserRegisterResponseDTO>> registerUser(@RequestBody UserRegisterRequestDTO request) {
+    public ResponseEntity<ApiResponse<UserRegisterResponseDTO>> registerUser(@Valid @RequestBody UserRegisterRequestDTO request) {
         ApiResponse<UserRegisterResponseDTO> response = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
