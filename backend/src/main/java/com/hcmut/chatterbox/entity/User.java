@@ -21,9 +21,6 @@ public class User {
     @Column(name="email", unique = true)
     private String email;
     
-    @Column(name="phone", unique = true)
-    private String phone;
-    
     @Column(name="hash_password")
     private String hashPassword;
     

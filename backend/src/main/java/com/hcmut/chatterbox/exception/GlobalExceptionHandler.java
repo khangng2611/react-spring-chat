@@ -12,15 +12,10 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BizNotFoundException.class)
-    public ResponseEntity<ApiResponse<?>> handleNotFoundException(BizNotFoundException ex) {
-        ApiResponse<?> notFoundResponse = ApiResponse.notFound(ex.getMessage());
-        return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
-    }
     
-    @ExceptionHandler(BizBadRequestException.class)
-    public ResponseEntity<ApiResponse<?>> handleBadRequestException(BizBadRequestException ex) {
-        ApiResponse<?> badRequestResponse = ApiResponse.badRequest(ex.getMessage());
+    @ExceptionHandler(BizException.class)
+    public ResponseEntity<ApiResponse<?>> handleBizException(BizException ex) {
+        ApiResponse<?> badRequestResponse = ApiResponse.badRequest(ex.getErrorEnum().getMessage());
         return new ResponseEntity<>(badRequestResponse, HttpStatus.BAD_REQUEST);
     }
     

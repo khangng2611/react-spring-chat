@@ -1,6 +1,7 @@
 package com.hcmut.chatterbox.controller;
 
 import com.hcmut.chatterbox.dto.request.UserRegisterRequestDTO;
+import com.hcmut.chatterbox.dto.request.UserVerifyOtpRequestDTO;
 import com.hcmut.chatterbox.dto.response.ApiResponse;
 import com.hcmut.chatterbox.dto.response.UserRegisterResponseDTO;
 import com.hcmut.chatterbox.service.UserService;
@@ -23,9 +24,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
-//    @PostMapping("/verify")
-//    public ResponseEntity<String> verify(@RequestBody VerifyRequest request) {
-//        userService.verify(request);
-//        return ResponseEntity.ok("Account verified successfully.");
-//    }
+    @PostMapping("/verify")
+    public ResponseEntity<ApiResponse<?>> verifyOtp(@RequestBody UserVerifyOtpRequestDTO request) {
+        ApiResponse<?> response = userService.verifyOtp(request);
+        return ResponseEntity.ok(response);
+    }
 }

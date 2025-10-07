@@ -87,12 +87,12 @@ public class ApiResponse<T> {
         );
     }
     
-    public static <T> ApiResponse<T> internalServerError(String message) {
+    public static <T> ApiResponse<T> internalServerError(String error) {
         return new ApiResponse<>(
                 false,
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ObjectUtils.isEmpty(message) ? HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase() : message,
-                new ArrayList<>(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                List.of(error),
                 null
         );
     }

@@ -8,7 +8,6 @@ public class UserConverter {
     public static User toEntity (UserRegisterRequestDTO userDTO) {
         User user = new User();
         user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
         user.setHashPassword(userDTO.getHashedPassword());
         user.setFullName(userDTO.getFullName());
         return user;
@@ -16,10 +15,10 @@ public class UserConverter {
     
     public static UserRegisterResponseDTO toUserRegisterResponseDTO (User userEntity) {
         UserRegisterResponseDTO registerResponseDTO = new UserRegisterResponseDTO();
+        registerResponseDTO.setId(userEntity.getId());
         registerResponseDTO.setEmail(userEntity.getEmail());
-        registerResponseDTO.setPhone(userEntity.getPhone());
         registerResponseDTO.setFullName(userEntity.getFullName());
+        registerResponseDTO.setRegisterStatus(userEntity.getRegisterStatus().name());
         return registerResponseDTO;
-        
     }
 }
