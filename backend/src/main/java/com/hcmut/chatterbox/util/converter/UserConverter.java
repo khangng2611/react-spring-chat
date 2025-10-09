@@ -8,7 +8,6 @@ public class UserConverter {
     public static User toEntity (UserRegisterRequestDTO userDTO) {
         User user = new User();
         user.setEmail(userDTO.getEmail());
-        user.setHashPassword(userDTO.getHashedPassword());
         user.setFullName(userDTO.getFullName());
         return user;
     }

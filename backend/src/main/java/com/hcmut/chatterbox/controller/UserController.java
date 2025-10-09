@@ -1,15 +1,12 @@
 package com.hcmut.chatterbox.controller;
 
 
-import com.hcmut.chatterbox.dto.request.SignInDTO;
 import com.hcmut.chatterbox.entity.User;
 import com.hcmut.chatterbox.service.impl.UserServiceImpl;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin
