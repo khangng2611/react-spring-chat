@@ -1,4 +1,4 @@
-package com.hcmut.chatterbox.util;
+package com.hcmut.chatterbox.util.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

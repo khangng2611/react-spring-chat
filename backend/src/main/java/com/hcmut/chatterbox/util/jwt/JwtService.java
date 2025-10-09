@@ -1,4 +1,4 @@
-package com.hcmut.chatterbox.util;
+package com.hcmut.chatterbox.util.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

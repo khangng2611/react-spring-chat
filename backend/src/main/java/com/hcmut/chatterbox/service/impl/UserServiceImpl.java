@@ -15,7 +15,7 @@ import com.hcmut.chatterbox.exception.BizException;
 import com.hcmut.chatterbox.repository.UserRepository;
 import com.hcmut.chatterbox.service.UserService;
 import com.hcmut.chatterbox.util.EmailService;
-import com.hcmut.chatterbox.util.JwtService;
+import com.hcmut.chatterbox.util.jwt.JwtService;
 import com.hcmut.chatterbox.util.Utils;
 import com.hcmut.chatterbox.util.converter.UserConverter;
 import jakarta.mail.MessagingException;
@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final EmailService emailService;
-//    private AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     
