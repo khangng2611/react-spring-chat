@@ -2,7 +2,6 @@ package com.hcmut.chatterbox.service.impl;
 
 import com.hcmut.chatterbox.constant.Constants;
 import com.hcmut.chatterbox.constant.ErrorEnum;
-import com.hcmut.chatterbox.dto.response.ApiResponse;
 import com.hcmut.chatterbox.dto.response.UploadFileResponseDTO;
 import com.hcmut.chatterbox.exception.BizException;
 import com.hcmut.chatterbox.service.FileService;
@@ -18,7 +17,7 @@ import java.io.IOException;
 public class FileServiceImpl implements FileService {
     private final GridFsTemplate gridFsTemplate;
     
-    public ApiResponse<UploadFileResponseDTO> storeFile(MultipartFile file) {
+    public UploadFileResponseDTO storeFile(MultipartFile file) {
         String contentType = file.getContentType();
         if (!contentType.startsWith("image/") && !contentType.startsWith("video/")) {
             throw new BizException(ErrorEnum.INVALID_FILE_TYPE);
@@ -32,6 +31,6 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ApiResponse.success(new UploadFileResponseDTO(fileId));
+        return new UploadFileResponseDTO(fileId);
     }
 }

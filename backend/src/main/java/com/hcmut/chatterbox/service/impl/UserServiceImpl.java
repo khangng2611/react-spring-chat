@@ -6,7 +6,6 @@ import com.hcmut.chatterbox.dto.request.LoginRequestDTO;
 import com.hcmut.chatterbox.dto.request.RefreshTokenRequestDTO;
 import com.hcmut.chatterbox.dto.request.UserRegisterRequestDTO;
 import com.hcmut.chatterbox.dto.request.UserVerifyOtpRequestDTO;
-import com.hcmut.chatterbox.dto.response.ApiResponse;
 import com.hcmut.chatterbox.dto.response.TokenResponseDTO;
 import com.hcmut.chatterbox.dto.response.UserRegisterResponseDTO;
 import com.hcmut.chatterbox.entity.User;
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     
-    public ApiResponse<UserRegisterResponseDTO> registerUser(UserRegisterRequestDTO requestDTO) {
+    public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO requestDTO) {
         // Check if email is registered
         Optional<User> existingUser = userRepository.findByEmail(requestDTO.getEmail());
         if (existingUser.isPresent()) {
@@ -68,13 +67,12 @@ public class UserServiceImpl implements UserService {
         }
         
         // Build response
-        UserRegisterResponseDTO responseDTO = UserConverter.toUserRegisterResponseDTO(createdUser);
-        return ApiResponse.created(responseDTO);
+        return UserConverter.toUserRegisterResponseDTO(createdUser);
     }
     
     @Override
     @Transactional
-    public ApiResponse<String> verifyOtp(UserVerifyOtpRequestDTO requestDTO) {
+    public void verifyOtp(UserVerifyOtpRequestDTO requestDTO) {
         // Validate OTP
         String storedOtp = (String) redisTemplate.opsForValue().get(Constants.USER_REGISTER_OTP_PREFIX + requestDTO.getEmail());
         if (storedOtp == null || !storedOtp.equals(requestDTO.getOtp())) {
@@ -84,11 +82,10 @@ public class UserServiceImpl implements UserService {
         // Activate user & delete OTP in redis
         userRepository.updateRegisterStatusByEmail(requestDTO.getEmail(), RegisterStatus.ACTIVE);
         redisTemplate.delete(Constants.USER_REGISTER_OTP_PREFIX + requestDTO.getEmail());
-        return ApiResponse.success(null);
     }
     
     @Override
-    public ApiResponse<TokenResponseDTO> login(LoginRequestDTO request) {
+    public TokenResponseDTO login(LoginRequestDTO request) {
         // Check if email is existed and valid password
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BizException(ErrorEnum.LOGIN_FAILED));
@@ -114,12 +111,11 @@ public class UserServiceImpl implements UserService {
                 TimeUnit.DAYS
         );
         
-        TokenResponseDTO tokenResponse = new TokenResponseDTO(accessToken, refreshToken);
-        return ApiResponse.success(tokenResponse);
+        return new TokenResponseDTO(accessToken, refreshToken);
     }
     
     @Override
-    public ApiResponse<TokenResponseDTO> refreshToken(RefreshTokenRequestDTO request) {
+    public TokenResponseDTO refreshToken(RefreshTokenRequestDTO request) {
         // Validate refreshToken from request with saved one in Redis
         String requestedRefreshToken = request.getRefreshToken();
         String email = jwtService.getEmailFromToken(requestedRefreshToken);
@@ -131,8 +127,7 @@ public class UserServiceImpl implements UserService {
         
         // Generate new accessToken
         String newAccessToken = jwtService.generateAccessToken(email);
-        TokenResponseDTO tokenResponse = new TokenResponseDTO(newAccessToken, storedRefreshToken);
-        return ApiResponse.success(tokenResponse);
+        return new TokenResponseDTO(newAccessToken, storedRefreshToken);
     }
     
     

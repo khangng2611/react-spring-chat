@@ -22,20 +22,20 @@ public class ConversationController {
     
     @PostMapping("/group")
     public ResponseEntity<ApiResponse<Conversation>> createGroup(@RequestBody GroupCreateRequestDTO request) {
-        ApiResponse<Conversation> response = conversationService.createGroup(
+        Conversation response = conversationService.createGroup(
                 request.getName(),
                 request.getCreatedBy(),
                 request.getParticipantIds()
         );
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response));
     }
     
     @PostMapping("/one-to-one")
     public ResponseEntity<ApiResponse<Conversation>> createOneToOne(@RequestBody OneToOneCreateRequestDTO request) {
-        ApiResponse<Conversation> response = conversationService.createOneToOne(
+        Conversation response = conversationService.createOneToOne(
                 request.getUserId1(),
                 request.getUserId2()
         );
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response));
     }
 }

@@ -5,6 +5,7 @@ import com.hcmut.chatterbox.dto.request.MessageRequestDTO;
 import com.hcmut.chatterbox.entity.Conversation;
 import com.hcmut.chatterbox.entity.Message;
 import com.hcmut.chatterbox.exception.BizException;
+import com.hcmut.chatterbox.service.MessageService;
 import com.hcmut.chatterbox.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
-public class MessageService {
+public class MessageServiceImpl implements MessageService {
     private final MongoTemplate mongoTemplate;
     private final UserService userService;
     

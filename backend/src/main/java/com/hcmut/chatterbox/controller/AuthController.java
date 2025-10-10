@@ -23,25 +23,25 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserRegisterResponseDTO>> registerUser(@RequestBody @Valid UserRegisterRequestDTO request) {
-        ApiResponse<UserRegisterResponseDTO> response = userService.registerUser(request);
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        UserRegisterResponseDTO response = userService.registerUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response));
     }
     
     @PostMapping("/verify")
     public ResponseEntity<ApiResponse<?>> verifyOtp(@RequestBody @Valid UserVerifyOtpRequestDTO request) {
-        ApiResponse<?> response = userService.verifyOtp(request);
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        userService.verifyOtp(request);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null));
     }
     
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenResponseDTO>> login(@RequestBody @Valid LoginRequestDTO request) {
-        ApiResponse<TokenResponseDTO> response = userService.login(request);
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        TokenResponseDTO response = userService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
     }
     
     @PostMapping("/refresh-token")
     public ResponseEntity<ApiResponse<TokenResponseDTO>> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
-        ApiResponse<TokenResponseDTO> response = userService.refreshToken(request);
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        TokenResponseDTO response = userService.refreshToken(request);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
     }
 }

@@ -3,7 +3,7 @@ package com.hcmut.chatterbox.controller;
 import com.hcmut.chatterbox.dto.request.MessageRequestDTO;
 import com.hcmut.chatterbox.entity.Message;
 import com.hcmut.chatterbox.service.ConversationService;
-import com.hcmut.chatterbox.service.impl.MessageService;
+import com.hcmut.chatterbox.service.MessageService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

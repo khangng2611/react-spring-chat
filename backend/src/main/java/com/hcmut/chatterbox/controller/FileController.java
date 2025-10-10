@@ -20,7 +20,7 @@ public class FileController {
     
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse<UploadFileResponseDTO>> uploadFile(@RequestParam("file") MultipartFile file) {
-        ApiResponse<UploadFileResponseDTO> response = fileService.storeFile(file);
-        return ResponseEntity.status(HttpStatus.valueOf(response.getStatusCode())).body(response);
+        UploadFileResponseDTO response = fileService.storeFile(file);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(response));
     }
 }
