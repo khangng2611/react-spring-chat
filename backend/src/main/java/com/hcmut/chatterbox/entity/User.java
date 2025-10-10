@@ -1,11 +1,11 @@
 package com.hcmut.chatterbox.entity;
 
 import com.hcmut.chatterbox.enums.RegisterStatus;
-import com.hcmut.chatterbox.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @NoArgsConstructor
@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", updatable = false, nullable = false)
+    private String id;
     
     @Column(name="email", unique = true)
     private String email;
@@ -26,10 +27,6 @@ public class User {
     
     @Column(name="full_name")
     private String fullName;
-    
-//    @Enumerated(EnumType.STRING)
-//    @Column(name="status")
-//    private UserStatus status = UserStatus.OFFLINE;
     
     @Enumerated(EnumType.STRING)
     @Column(name="register_status")

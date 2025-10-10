@@ -17,11 +17,11 @@ public class UserController {
         this.userService = userService;
     }
     
-    @MessageMapping("/user.addUser")
-    @SendTo("/online")
-    public User addUser(@Payload  User user) {
-        return userService.connect(user);
-    }
+//    @MessageMapping("/user.addUser")
+//    @SendTo("/online")
+//    public User addUser(@Payload  User user) {
+//        return userService.connect(user);
+//    }
     
 //    @MessageMapping("/user.disconnectUser")
 //    @SendTo("/online")

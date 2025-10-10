@@ -136,25 +136,25 @@ public class UserServiceImpl implements UserService {
     }
     
     
-    public User connect(User user) {
-        Optional<User> checkUser = userRepository.findById(user.getId());
-        if (checkUser.isPresent()) {
-            User storedUser = checkUser.get();
-//            storedUser.setStatus(UserStatus.ONLINE);
-            return userRepository.save(storedUser);
-        }
-        return null;
-    }
-
-    public User disconnect(User user) {
-        Optional<User> checkUser = userRepository.findById(user.getId());
-        if (checkUser.isPresent()) {
-            User storedUser = checkUser.get();
-//            storedUser.setStatus(UserStatus.OFFLINE);
-            return userRepository.save(storedUser);
-        }
-        return null;
-    }
+//    public User connect(User user) {
+//        Optional<User> checkUser = userRepository.findById(user.getId());
+//        if (checkUser.isPresent()) {
+//            User storedUser = checkUser.get();
+////            storedUser.setStatus(UserStatus.ONLINE);
+//            return userRepository.save(storedUser);
+//        }
+//        return null;
+//    }
+//
+//    public User disconnect(User user) {
+//        Optional<User> checkUser = userRepository.findById(user.getId());
+//        if (checkUser.isPresent()) {
+//            User storedUser = checkUser.get();
+////            storedUser.setStatus(UserStatus.OFFLINE);
+//            return userRepository.save(storedUser);
+//        }
+//        return null;
+//    }
     
 //    public List<User> getConnectedUsers() {
 //        return userRepository.findByStatus(UserStatus.ONLINE);

@@ -1,70 +1,39 @@
 package com.hcmut.chatterbox.service.impl;
 
-import com.hcmut.chatterbox.dto.request.PrivateMessageDTO;
-import com.hcmut.chatterbox.dto.request.PublicMessageDTO;
-import com.hcmut.chatterbox.entity.PrivateMessage;
-import com.hcmut.chatterbox.entity.PublicMessage;
-import com.hcmut.chatterbox.entity.Room;
-import com.hcmut.chatterbox.entity.User;
-import com.hcmut.chatterbox.repository.PrivateMessageRepository;
-import com.hcmut.chatterbox.repository.PublicMessageRepository;
+import com.hcmut.chatterbox.constant.ErrorEnum;
+import com.hcmut.chatterbox.dto.request.MessageRequestDTO;
+import com.hcmut.chatterbox.entity.Conversation;
+import com.hcmut.chatterbox.entity.Message;
+import com.hcmut.chatterbox.exception.BizException;
+import com.hcmut.chatterbox.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class MessageService {
-    private PrivateMessageRepository privateMessageRepository;
-    private PublicMessageRepository publicMessageRepository;
-    private RoomService roomService;
-    private UserServiceImpl userService;
+    private final MongoTemplate mongoTemplate;
+    private final UserService userService;
     
-    public MessageService(
-        PrivateMessageRepository privateMessageRepository,
-        PublicMessageRepository publicMessageRepository,
-        RoomService roomService,
-        UserServiceImpl userService
-    ) {
-        this.privateMessageRepository = privateMessageRepository;
-        this.publicMessageRepository = publicMessageRepository;
-        this.roomService = roomService;
-        this.userService = userService;
-    }
-    
-    public PrivateMessage save(PrivateMessageDTO message) {
-        Room room = roomService.getRoom(
-                message.getSender().getId(),
-                message.getReceiver().getId(),
-                true
-        );
-        if (room == null) return null;
-        User sender = userService.find(message.getSender().getId());
-        User receiver = userService.find(message.getReceiver().getId());
-        if (sender == null || receiver == null ) return null;
-        PrivateMessage newMessage = PrivateMessage.builder()
-            .sender(sender)
-            .receiver(receiver)
-            .content(message.getContent())
-            .roomId(room.getId())
-            .build();
-        return privateMessageRepository.save(newMessage);
-    }
-    
-    public PublicMessage save(PublicMessageDTO message) {
-        User sender = userService.find(message.getSender().getId());
-        if (sender == null) return null;
-        PublicMessage newMessage = PublicMessage.builder()
-            .sender(sender)
-            .content(message.getContent())
-            .build();
-        return publicMessageRepository.save(newMessage);
-    }
-    
-    public List<PrivateMessage> getMessages(int senderId, int receiverId) {
-        Room room = roomService.getRoom(senderId, receiverId, false);
-        if (room != null) {
-            return privateMessageRepository.findByRoomId(room.getId());
+    public Message save(MessageRequestDTO messageDTO) {
+        // Validate conversation and sender
+        Conversation conversation = mongoTemplate.findById(messageDTO.getConversationId(), Conversation.class);
+        if (conversation == null || !conversation.getParticipants().contains(messageDTO.getSenderId())) {
+            throw new BizException(ErrorEnum.INVALID_CONVERSATION_OR_SENDER);
         }
-        return null;
+        
+        Message message = new Message();
+        message.setConversationId(messageDTO.getConversationId());
+        message.setSenderId(messageDTO.getSenderId());
+        message.setContentType(messageDTO.getContentType());
+        message.setContent(messageDTO.getContent());
+        message.setFileId(messageDTO.getFileId());
+        message.setCreatedAt(LocalDateTime.now());
+        message.setRead(false);
+        
+        return mongoTemplate.save(message);
     }
 }
