@@ -12,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 @AllArgsConstructor
 public class EmailService {
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Async
     public void sendOtpEmail(String toEmail, String otp) throws MessagingException {
