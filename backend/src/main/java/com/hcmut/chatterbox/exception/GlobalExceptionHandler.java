@@ -13,6 +13,12 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<?>> handleUnauthorizedException(UnauthorizedException ex) {
+        ApiResponse<?> unauthorizedResponse = ApiResponse.unauthorized(ex.getErrorEnum().getMessage());
+        return new ResponseEntity<>(unauthorizedResponse, HttpStatus.UNAUTHORIZED);
+    }
+    
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ApiResponse<?>> handleBizException(BizException ex) {
         ApiResponse<?> badRequestResponse = ApiResponse.badRequest(ex.getErrorEnum().getMessage());

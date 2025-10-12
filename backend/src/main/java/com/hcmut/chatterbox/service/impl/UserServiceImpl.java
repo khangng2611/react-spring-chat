@@ -100,8 +100,8 @@ public class UserServiceImpl implements UserService {
         }
         
         // Generate token
-        String accessToken = jwtService.generateAccessToken(request.getEmail());
-        String refreshToken = jwtService.generateRefreshToken(request.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getId());
+        String refreshToken = jwtService.generateRefreshToken(request.getEmail(), user.getId());
         
         // Save refresh token to Redis
         redisTemplate.opsForValue().set(
@@ -119,6 +119,7 @@ public class UserServiceImpl implements UserService {
         // Validate refreshToken from request with saved one in Redis
         String requestedRefreshToken = request.getRefreshToken();
         String email = jwtService.getEmailFromToken(requestedRefreshToken);
+        String userId = jwtService.getUserIdFromToken(email);
         String storedRefreshToken = (String) redisTemplate.opsForValue().get(Constants.REFRESH_TOKEN_PREFIX + email);
         
         if (storedRefreshToken == null || !storedRefreshToken.equals(requestedRefreshToken)) {
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
         }
         
         // Generate new accessToken
-        String newAccessToken = jwtService.generateAccessToken(email);
+        String newAccessToken = jwtService.generateAccessToken(email, userId);
         return new TokenResponseDTO(newAccessToken, storedRefreshToken);
     }
     

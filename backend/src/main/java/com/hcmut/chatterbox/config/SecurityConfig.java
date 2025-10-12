@@ -26,6 +26,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Swagger UI endpoints
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Static resources for testing
+                        .requestMatchers("/websocket-test-client.html").permitAll()
+                        .requestMatchers("/*.html", "/*.js", "/*.css").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

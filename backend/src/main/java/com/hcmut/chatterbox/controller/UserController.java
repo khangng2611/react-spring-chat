@@ -34,9 +34,5 @@ public class UserController {
 //        return userService.getConnectedUsers();
 //    }
 //
-//    @PostMapping("/signin")
-//    public User signIn (@RequestBody SignInDTO signInInfo ) {
-//        return userService.loadUser(signInInfo);
-//    }
     
 }

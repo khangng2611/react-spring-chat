@@ -1,5 +1,6 @@
 package com.hcmut.chatterbox.util.jwt;
 
+import com.hcmut.chatterbox.constant.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,20 +25,22 @@ public class JwtService {
     @Value("${jwt.refresh-token-expiration}")
     private long refreshTokenExpiration;
     
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(String email, String userId) {
         Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
                 .subject(email)
+                .claim(Constants.USER_ID_CLAIM, userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(key)
                 .compact();
     }
     
-    public String generateRefreshToken(String email) {
+    public String generateRefreshToken(String email, String userId) {
         Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
                 .subject(email)
+                .claim(Constants.USER_ID_CLAIM, userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .signWith(key)
@@ -46,6 +49,10 @@ public class JwtService {
     
     public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
+    }
+    
+    public String getUserIdFromToken(String token) {
+        return getClaimFromToken(token, claims -> claims.get(Constants.USER_ID_CLAIM, String.class));
     }
     
     public Date getExpirationDateFromToken(String token) {

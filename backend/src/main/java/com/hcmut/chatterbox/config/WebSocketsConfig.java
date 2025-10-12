@@ -1,6 +1,8 @@
 package com.hcmut.chatterbox.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hcmut.chatterbox.constant.ErrorEnum;
+import com.hcmut.chatterbox.exception.UnauthorizedException;
 import com.hcmut.chatterbox.util.jwt.JwtService;
 import com.sun.security.auth.UserPrincipal;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,9 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -57,19 +61,27 @@ public class WebSocketsConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+                
+                if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
                     String authToken = accessor.getFirstNativeHeader("Authorization");
+                    
                     if (authToken != null && authToken.startsWith("Bearer ")) {
                         String jwt = authToken.substring(7);
-                        String email = jwtService.getEmailFromToken(jwt);
-                        if (jwtService.validateToken(jwt, email)) {
-                            accessor.setUser(new UserPrincipal(email));
-                        } else {
-                            throw new IllegalArgumentException("Invalid JWT");
+                        try {
+                            String email = jwtService.getEmailFromToken(jwt);
+                            String userId = jwtService.getUserIdFromToken(jwt);
+                            
+                            if (jwtService.validateToken(jwt, email) && !ObjectUtils.isEmpty(userId)) {
+                                accessor.setUser(new UserPrincipal(userId));
+                            } else {
+                                throw new UnauthorizedException(ErrorEnum.INVALID_JWT);
+                            }
+                        } catch (Exception e) {
+                            throw new UnauthorizedException(ErrorEnum.INVALID_JWT);
                         }
                     } else {
-                        throw new IllegalArgumentException("Missing JWT");
+                        throw new UnauthorizedException(ErrorEnum.INVALID_JWT);
                     }
                 }
                 return message;

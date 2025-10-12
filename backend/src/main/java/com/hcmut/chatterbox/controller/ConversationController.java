@@ -3,7 +3,6 @@ package com.hcmut.chatterbox.controller;
 import com.hcmut.chatterbox.dto.request.GroupCreateRequestDTO;
 import com.hcmut.chatterbox.dto.request.OneToOneCreateRequestDTO;
 import com.hcmut.chatterbox.dto.response.ApiResponse;
-import com.hcmut.chatterbox.dto.response.UploadFileResponseDTO;
 import com.hcmut.chatterbox.entity.Conversation;
 import com.hcmut.chatterbox.service.ConversationService;
 import lombok.AllArgsConstructor;
@@ -22,20 +21,13 @@ public class ConversationController {
     
     @PostMapping("/group")
     public ResponseEntity<ApiResponse<Conversation>> createGroup(@RequestBody GroupCreateRequestDTO request) {
-        Conversation response = conversationService.createGroup(
-                request.getName(),
-                request.getCreatedBy(),
-                request.getParticipantIds()
-        );
+        Conversation response = conversationService.createGroup(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response));
     }
     
     @PostMapping("/one-to-one")
     public ResponseEntity<ApiResponse<Conversation>> createOneToOne(@RequestBody OneToOneCreateRequestDTO request) {
-        Conversation response = conversationService.createOneToOne(
-                request.getUserId1(),
-                request.getUserId2()
-        );
+        Conversation response = conversationService.createOneToOne(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response));
     }
 }

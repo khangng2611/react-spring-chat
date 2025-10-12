@@ -1,6 +1,7 @@
 package com.hcmut.chatterbox.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,15 +17,13 @@ public class Message {
     
     private String senderId;
     
-    // "TEXT", "IMAGE", "VIDEO"
     private String contentType;
     
-    // Text or file URL
     private String content;
     
-    // GridFS file ID
     private String fileId;
     
+    @CreatedDate
     private LocalDateTime createdAt;
     
     private boolean isRead;
