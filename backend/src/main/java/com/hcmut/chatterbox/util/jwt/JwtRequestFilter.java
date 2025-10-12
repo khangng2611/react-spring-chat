@@ -1,5 +1,6 @@
 package com.hcmut.chatterbox.util.jwt;
 
+import com.hcmut.chatterbox.constant.Constants;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,12 +22,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
+        final String authorizationHeader = request.getHeader(Constants.AUTHORIZATION_HEADER);
         
         String email = null;
         String jwt = null;
         
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(Constants.BEARER_PREFIX)) {
             jwt = authorizationHeader.substring(7);
             email = jwtService.getEmailFromToken(jwt);
         }

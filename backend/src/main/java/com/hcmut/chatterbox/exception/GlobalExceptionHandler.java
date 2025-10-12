@@ -1,6 +1,7 @@
 package com.hcmut.chatterbox.exception;
 
 import com.hcmut.chatterbox.dto.response.ApiResponse;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,9 +14,9 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ApiResponse<?>> handleUnauthorizedException(UnauthorizedException ex) {
-        ApiResponse<?> unauthorizedResponse = ApiResponse.unauthorized(ex.getErrorEnum().getMessage());
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<?>> handleJwtException(JwtException ex) {
+        ApiResponse<?> unauthorizedResponse = ApiResponse.unauthorized(ex.getMessage());
         return new ResponseEntity<>(unauthorizedResponse, HttpStatus.UNAUTHORIZED);
     }
     

@@ -1,6 +1,7 @@
 package com.hcmut.chatterbox.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hcmut.chatterbox.constant.Constants;
 import com.hcmut.chatterbox.constant.ErrorEnum;
 import com.hcmut.chatterbox.exception.UnauthorizedException;
 import com.hcmut.chatterbox.util.jwt.JwtService;
@@ -64,9 +65,9 @@ public class WebSocketsConfig implements WebSocketMessageBrokerConfigurer {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
                 
                 if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String authToken = accessor.getFirstNativeHeader("Authorization");
+                    String authToken = accessor.getFirstNativeHeader(Constants.AUTHORIZATION_HEADER);
                     
-                    if (authToken != null && authToken.startsWith("Bearer ")) {
+                    if (authToken != null && authToken.startsWith(Constants.BEARER_PREFIX)) {
                         String jwt = authToken.substring(7);
                         try {
                             String email = jwtService.getEmailFromToken(jwt);
