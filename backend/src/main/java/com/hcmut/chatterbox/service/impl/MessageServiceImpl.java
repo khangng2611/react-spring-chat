@@ -13,9 +13,15 @@ import com.hcmut.chatterbox.service.MessageService;
 import com.hcmut.chatterbox.util.converter.MessageConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -64,5 +70,25 @@ public class MessageServiceImpl implements MessageService {
                 }
             }
         }
+    }
+    
+    @Override
+    public List<Message> getChatHistory(String conversationId, String userId, int page, int size) {
+        // Validate conversation with userId
+        Optional<Conversation> conversationOptional = conversationRepository.findById(conversationId);
+        if (conversationOptional.isEmpty()) {
+            throw new BizException(ErrorEnum.INVALID_CONVERSATION);
+        }
+        Conversation conversation = conversationOptional.get();
+        if (!conversation.getParticipants().contains(userId)) {
+            throw new BizException(ErrorEnum.CONVERSATION_NOT_INCLUDE_USER);
+        }
+        
+        Query query = new Query(Criteria.where("conversationId").is(conversationId));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        query.with(pageable);
+//        conversationRepository.findAll()
+//        return conversationRepository.find(query, Message.class);
+        return null;
     }
 }

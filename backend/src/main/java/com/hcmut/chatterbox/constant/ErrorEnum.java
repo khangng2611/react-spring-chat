@@ -16,7 +16,8 @@ public enum ErrorEnum {
     // Message Error
     INVALID_CONVERSATION("Invalid conversation"),
     INVALID_SENDER("Invalid sender"),
-    INVALID_RECEIVER("Invalid receiver");
+    INVALID_RECEIVER("Invalid receiver"),
+    CONVERSATION_NOT_INCLUDE_USER("You do not have access to this conversation");
     
     private final String message;
     
